@@ -6,7 +6,7 @@ var PLUGIN_INFO =
     <description lang="ja">KeySnailでHaH</description>
     <version>0.0.1</version>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/HoK.ks.js</updateURL>
-    //<iconURL></iconURL>
+    <iconURL></iconURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
