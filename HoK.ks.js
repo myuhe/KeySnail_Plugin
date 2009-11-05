@@ -17,14 +17,14 @@ var PLUGIN_INFO =
     <ext>HoK</ext>
     </provides>
     <detail><![CDATA[
-		     === Usage ===
-		     ==== Suggestion ====
-		     ==== Command ====
-		     === 説明 ===
-		     ==== サジェストによるインストール ====
-		     HaHをKeysnailプラグインとして移植したものです。
-		    
-		     ]]></detail>
+		       === Usage ===
+		       ==== Suggestion ====
+		       ==== Command ====
+		       === 説明 ===
+		       ==== サジェストによるインストール ====
+		       HaHをKeysnailプラグインとして移植したものです。
+		   
+	       ]]></detail>
     </KeySnailPlugin>;
 
 
@@ -51,26 +51,19 @@ var hah = {
     lastMatchHint : null,
 
     getAbsolutePosition : function (elem) {
-		alert('abs');
-
         var style = getComputedStyle(elem, null);
-		//  if (style.visibility === 'hidden' || style.opacity === '0') return false;
-		var rect = elem.getClientRects()[0];
-		alert('rect');
-		//	if (rect && rect.right - rect.left && rect.left >= 0 && rect.top >= -5 && rect.bottom <= hah.inHeight + 5 && rect.right <= hah.inWidth) {
-		    alert('nextnextabs');
-		    return {
-			top: (hah.body.scrollTop || hah.html.scrollTop) - hah.html.clientTop + rect.top,
-			    left: (hah.body.scrollLeft || hah.html.scrollLeft) - hah.html.clientLeft + rect.left
-
-			    }
-		
-
-	// 	}
-// 		alert('nextnextabs');
-// 		return false;
-		
+	if (style.visibility === 'hidden' || style.opacity === '0') return false;
+	var rect = elem.getClientRects()[0];
+	if (rect && rect.right - rect.left && rect.left >= 0 && rect.top >= -5 && rect.bottom <= hah.inHeight + 5 && rect.right <= hah.inWidth) {
+	    return {
+	        top: (hah.body.scrollTop || hah.html.scrollTop) - hah.html.clientTop + rect.top,
+	        left: (hah.body.scrollLeft || hah.html.scrollLeft) - hah.html.clientLeft + rect.left
+                
+	    };
+        }
+        return false;
     },
+
     createText : function (num) {
         var text = '';
         var l = hah.hintKeysLength;
@@ -88,39 +81,37 @@ var hah = {
     },
     drawHints : function(){
         var k = 0;
-        Array.slice(document.querySelectorAll(hah.selector)).forEach(function(elem, ind){
-		alert('toptop');
+        Array.slice(content.document.querySelectorAll(hah.selector)).forEach(
+            function(elem, ind) {
 		var pos = hah.getAbsolutePosition(elem);
-		alert('top');
 
 		if (pos === false) return;
 		var hint = hah.createText(k);
 		var span = hah.hintSpan.cloneNode(false);
-		span.appendChild(document.createTextNode(hint));
-		alert('draw');
+		span.appendChild(content.document.createTextNode(hint));
 		var ss = span.style;
 		ss.left = Math.max(0, pos.left - 8) + 'px';
 		ss.top = Math.max(0, pos.top - 8) + 'px';
 		if (elem.hasAttribute('href') === false){
 		    ss.backgroundColor = hah.hintColorForm;
 		}
-		alert('last');
 		hah.hintElements[hint] = span;
 		span.element = elem;
 		hah.hintContainer.appendChild(span);
 		k++;
-        });
-        document.body.appendChild(hah.fragment);
+            });
+        content.document.body.appendChild(hah.fragment);
         document.addEventListener('keypress', this, true);
     },
     removeHints : function(){
-        document.body.removeChild(hah.hintContainer);
-        document.removeEventListener('keypress', this, true);
+	content.document.body.removeChild(hah.hintContainer);
+	document.removeEventListener('keypress', this, true);            
+	key.suspended = false;
     },
     blurHint : function(){
         if (hah.lastMatchHint){
             hah.lastMatchHint.style.backgroundColor = hah.lastMatchHint.element.hasAttribute('href')===true?
-                    hah.hintColorLink: hah.hintColorForm;
+                hah.hintColorLink: hah.hintColorForm;
             hah.lastMatchHint = null;
         }
     },
@@ -134,17 +125,17 @@ var hah = {
         event.stopPropagation();
         var onkey = hah.keyMap[key];
         switch(onkey){
-            case 'Bkspc' : 
-            case 'Delete' :
-                if (!hah.inputKey){
-                    hah.removeHints();
-                    return;
-                }
-                hah.inputKey ='';
-                hah.blurHint();
+        case 'Bkspc' : 
+        case 'Delete' :
+            if (!hah.inputKey){
+                hah.removeHints();
                 return;
-            default :
-                hah.inputKey += onkey;
+            }
+            hah.inputKey ='';
+            hah.blurHint();
+            return;
+        default :
+            hah.inputKey += onkey;
         };
         hah.blurHint();
         if (hah.inputKey in hah.hintElements === true){
@@ -157,12 +148,12 @@ var hah = {
 
     },
     init : function(){
-        if (!hah.hintContainer){
-            hah.fragment = document.createDocumentFragment();
-            hah.hintContainer = document.createElement('div');
+        // if (!hah.hintContainer) {;
+            hah.fragment = content.document.createDocumentFragment();
+            hah.hintContainer = content.document.createElement('div');
             hah.fragment.appendChild(hah.hintContainer);
             hah.hintContainer.id = hah.hintContainerId;
-            hah.hintSpan = document.createElement('span');
+            hah.hintSpan = content.document.createElement('span');
             var st = hah.hintSpan.style;
             st.position = 'absolute';
             st.zIndex = '2147483647';
@@ -174,11 +165,12 @@ var hah = {
             st.padding = '0px';
             st.margin = '0px';
             st.textTransform = 'uppercase';
-        }
+        // }
+
         hah.inHeight = window.innerHeight;
         hah.inWidth = window.innerWidth;
-        hah.html = document.documentElement;
-        hah.body = document.body;
+        hah.html = content.document.documentElement;
+        hah.body = content.document.body;
         hah.hintKeysLength = hah.hintKeys.length;
         
         hah.hintKeys.split('').forEach(function(l) { hah.keyMap[l.charCodeAt(0)] = l; });
@@ -187,16 +179,12 @@ var hah = {
 
 
 function lol(){
+    key.suspended = true;
     hah.init();
     hah.drawHints();
-    alert('test');
 }
 
 
-// ext.add("HoK", HoK,
-//         M({ja: "HoK",
-// 		    en: "execute HaH"}));
-
 ext.add("lol", lol,
         M({ja: "HoK",
-		    en: "execute HaH"}));
+	   en: "execute HaH"}));
