@@ -5,12 +5,12 @@ var PLUGIN_INFO =
     <description>HaH on KeySnail</description>
     <description lang="ja">KeySnailでHaH</description>
     <version>0.0.1</version>
-    <updateURL>http://github.com/mooz/keysnail/raw/master/plugins/github-plugin.ks.js</updateURL>
-    <iconURL>http://github.com/mooz/keysnail/raw/master/plugins/icon/github-plugin.icon.png</iconURL>
-    <author mail="yuhei.maeda@gmail.com" homepage="http://sheephead.homelinux.org/">mooz</author>
+    <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/HoK.ks.js</updateURL>
+    //<iconURL></iconURL>
+    <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
-    <minVersion>0.9.4</minVersion>
+    <minVersion>0.9.4</m
     <include>main</include>
     <provides>
     //    <ext>execute_HaH</ext>
