@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">HoK</name>
     <description>HaH on KeySnail</description>
     <description lang="ja">KeySnailでHaH</description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/HoK.ks.js</updateURL>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/HoK.png</iconURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
