@@ -51,9 +51,9 @@ var PLUGIN_INFO =
 		     === Usage ===
 		     ==== Suggestion ====
 		     ==== Command ====
-		     === 機能 ===
+		     ==== 機能 ====
 		     テキストエリアなどを外部エディタで開きます。
-		     ==== コマンド入力によるインストール ====
+		     ]]></detail>
     </KeySnailPlugin>;
  
 var optionsDefaultValue = {
