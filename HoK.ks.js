@@ -64,9 +64,9 @@ var PLUGIN_INFO =
 		       HaHをKeysnailプラグインとして移植したものです。
 
 		       === カスタマイズ ===
-===謝辞===
-このプラグインは、Grieverさんが書かれたFireFoxブックマークレットの一部を改変して、KeySnailのプラグインとしたものです。
-http://d.hatena.ne.jp/Griever/20090223/1235407852
+		       === 謝辞 ===
+		       このプラグインは、Grieverさんが書かれたFireFoxブックマークレットの一部を改変して、KeySnailのプラグインとしたものです。
+		       http://d.hatena.ne.jp/Griever/20090223/1235407852
 
 
 
