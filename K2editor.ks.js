@@ -3,9 +3,9 @@ var PLUGIN_INFO =
     <name>K2editor</name>
     <name lang="ja">K2editor</name>
     <description>K2editor</description>
-    <description lang="ja">KeySnailでHaH</description>
+    <description lang="ja">KeySnailで本当にEmacs</description>
     <version>0.0.1</version>
-    <updateURL>http://github.com/mooz/keysnail/raw/master/plugins/github-plugin.ks.js</updateURL>
+    <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2editor.ks.js</updateURL>
     <author mail="yuhei.maeda@gmail.com" homepage="http://sheephead.homelinux.org/">mooz</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
@@ -51,14 +51,9 @@ var PLUGIN_INFO =
 		     === Usage ===
 		     ==== Suggestion ====
 		     ==== Command ====
-		     === 説明 ===
-		     ==== サジェストによるインストール ====
-		     HaHをKeysnailプラグインとして移植したものです。
+		     === 機能 ===
+		     テキストエリアなどを外部エディタで開きます。
 		     ==== コマンド入力によるインストール ====
-		     このプラグインをインストールすることで次のエクステが追加されます。
-		     - github-install-plugin-from-this-page
-		     このエクステは現在見ている github のページから KeySnail プラグインを探しだし、見つかった場合はインストールを行うかどうかをユーザへ確認するものです。
-		     ]]></detail>
     </KeySnailPlugin>;
  
 var optionsDefaultValue = {
