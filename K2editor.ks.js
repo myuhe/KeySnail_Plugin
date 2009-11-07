@@ -4,7 +4,8 @@ var PLUGIN_INFO =
     <name lang="ja">K2editor</name>
     <description>K2editor</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
+　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2editor.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2editor.ks.js</updateURL>
     <author mail="yuhei.maeda@gmail.com" homepage="http://sheephead.homelinux.org/">mooz</author>
     <license>The MIT License</license>
@@ -12,12 +13,11 @@ var PLUGIN_INFO =
     <minVersion>0.9.4</minVersion>
     <include>main</include>
     <provides>
-    <ext>execute_HaH</ext>
-    <ext>HoK</ext>
+    <ext>edittext</ext>
     </provides>
     <options>
         <option>
-            <name>K2editor.edit</name>
+            <name>K2editor.editor</name>
             <type>string</type>
             <description>select editor(default Emacs)</description>
             <description lang="ja">エディタを選択(デフォルトはEmacs)</description>
@@ -35,24 +35,41 @@ var PLUGIN_INFO =
         <description lang="ja">編集するテキストのエンコードを選択(デフォルトはUTF-8)</description>
         </option>
         <option>
-            <name>hok.hint_color_link</name>
+            <name>K2editor.sep</name>
             <type>string</type>
-            <description>Color of the hints for links</description>
-            <description lang="ja">リンク用ヒントの色</description>
-        </option>
-        <option>
-            <name>hok.hint_color_form</name>
-            <type>string</type>
-            <description>Color of the hints for forms</description>
-            <description lang="ja">フォーム用ヒントの色</description>
+        <description>select separator(default /)</description>
+        <description lang="ja">プラットフォームに応じたセパレータを設定(デフォルトは/)</description>
         </option>
     </options>
     <detail><![CDATA[
-		     === Usage ===
-		     ==== Suggestion ====
-		     ==== Command ====
+
 		     ==== 機能 ====
 		     テキストエリアなどを外部エディタで開きます。
+==== 起動 ====
+
+次のようにして適当なキーへ K2editor を割り当てます。
+.keysnail.js 内の PRESERVE エリアへ以下のようなスクリプトを張り付けてください。
+>||
+key.setEditKey(["C-c", "e"], function (ev, arg) {
+    ext.exec("editext", arg);
+}, "外部エディタで編集", true);
+||<
+
+==== オプションの設定 ====
+プラットフォームやエディタに応じて、以下のオプションを設定します。
+.keysnail.js 内の PRESERVE エリアへ以下のようなスクリプトを張り付けてください。
+なお、デフォルトでは、Linuxの利用を想定した設定となっています。
+以下は、Windowsを使う場合の設定例です。
+>||
+plugins.options["K2editor.editor"]    = "C:\\WINDOWS\\notepad.exe";
+plugins.options["K2editor.ext"]    = "html";
+plugins.options["K2editor.encode"] = "UTF-8"
+plugins.options["K2editor.sep"] = "\\";
+||<
+
+                                     ==== 謝辞 ====
+                                     このプラグインは、以下のuserChromeスクリプトを参考にしました。
+　　　　　　　　　　　　　　　　　　http://space.geocities.yahoo.co.jp/gl/alice0775/view/20070223/1172156543　
 		     ]]></detail>
     </KeySnailPlugin>;
  
@@ -443,6 +460,6 @@ function editext() {
 }
 
 
-ext.add("editext", editext,
-        M({ja: "HoK",
-		    en: "execute HaH"}));
+ext.add("edit_text", editext,
+        M({ja: "外部エディタで編集",
+		    en: "edit by external editor"}));
