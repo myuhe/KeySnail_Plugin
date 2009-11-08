@@ -4,16 +4,16 @@ var PLUGIN_INFO =
     <name lang="ja">K2editor</name>
     <description>K2editor</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2editor.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2editor.ks.js</updateURL>
-    <author mail="yuhei.maeda@gmail.com" homepage="http://sheephead.homelinux.org/">mooz</author>
+    <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
     <minVersion>0.9.4</minVersion>
     <include>main</include>
     <provides>
-    <ext>edittext</ext>
+    <ext>edit_text</ext>
     </provides>
     <options>
         <option>
@@ -51,7 +51,7 @@ var PLUGIN_INFO =
 .keysnail.js 内の PRESERVE エリアへ以下のようなスクリプトを張り付けてください。
 >||
 key.setEditKey(["C-c", "e"], function (ev, arg) {
-    ext.exec("editext", arg);
+    ext.exec("edit_text", arg);
 }, "外部エディタで編集", true);
 ||<
 
@@ -111,24 +111,9 @@ var ucjs_ExternalEditor = {
   _dir_separator: null,
   
   init: function(){
-	//var platform = (platform.indexOf('win')>-1){
 	//   this._dir_separator = '\\'; /* windows */
-	// }else{
 	//this._dir_separator = '/';  /* unix */
 	this._dir_separator = getOption("sep");  /* unix */
-	//    }
-	//コンテキストメニューに外部エディタにより編集を追加
-	//     var menuitem = document.createElement("menuitem");
-	//     menuitem.setAttribute("id", "ucjs_ExternalEditor_menu_edit");
-	//     menuitem.setAttribute("label", "\u5916\u90e8\u30a8\u30c7\u30a3\u30bf\u306b\u3088\u308a\u7de8\u96c6");//外部エディタにより編集
-	//     menuitem.setAttribute("hidden", true);
-	//     menuitem.setAttribute("accesskey","E");
-	//     menuitem.setAttribute("oncommand", "ucjs_ExternalEditor.runapp(event);");
-//     var optionsitem = document.getElementById("context-sep-undo");
-//     optionsitem.parentNode.insertBefore(menuitem, optionsitem);
-//     //コンテキストメニューポップアップイベント追加
-//     var menu = document.getElementById("contentAreaContextMenu");
-//     if (menu) menu.addEventListener("popupshowing", ucjs_ExternalEditor.popupContextMenu, true);
   },
 
   uninit: function(){
@@ -163,19 +148,6 @@ var ucjs_ExternalEditor = {
     this._tmpdir = null;
   },
 
-//   popupContextMenu: function(){
-//     //コンテキストメニューがポップアップするぞ, テキストインプットならucjs_ExternalEditor_menu_editを表示
-//     if (gContextMenu){
-//       try{
-//         var target = gContextMenu.target;
-//         gContextMenu.showItem("ucjs_ExternalEditor_menu_edit", gContextMenu.onTextInput);
-//         if(target.hasAttribute('type') && target.getAttribute('type') == 'password') {
-//           document.getElementById("ucjs_ExternalEditor_menu_edit").setAttribute("hidden", true);
-//           //パスワードが見えるので,セキュリテイ上スキップします
-//         }
-//       }catch(ex){}
-//     }
-//   },
 
   checkfocus_window: function(){
     //メインウインドウにフォーカスが戻った, たぶん編集終わったので,テンポラリファイルの中身を書き戻す
