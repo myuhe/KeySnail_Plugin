@@ -1,12 +1,12 @@
 var PLUGIN_INFO =
     <KeySnailPlugin>
-    <name>K2editor</name>
-    <name lang="ja">K2editor</name>
-    <description>K2editor</description>
+    <name>K2Emacs</name>
+    <name lang="ja">K2Emacs</name>
+    <description>K2Emacs</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.3</version>
-　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2editor.png</iconURL>
-    <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2editor.ks.js</updateURL>
+    <version>0.0.4</version>
+　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.png</iconURL>
+    <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
@@ -17,25 +17,25 @@ var PLUGIN_INFO =
     </provides>
     <options>
         <option>
-            <name>K2editor.editor</name>
+            <name>K2Emacs.editor</name>
             <type>string</type>
             <description>select editor(default Emacs)</description>
             <description lang="ja">エディタを選択(デフォルトはEmacs)</description>
         </option>
         <option>
-            <name>K2editor.ext</name>
+            <name>K2Emacs.ext</name>
             <type>string</type>
             <description>select file type(txt)</description>
             <description lang="ja">エディタで開くファイルの種類を選択(デフォルトはtxt)</description>
         </option>
         <option>
-            <name>K2editor.encode</name>
+            <name>K2Emacs.encode</name>
             <type>string</type>
         <description>select encode(default UTF-8)</description>
         <description lang="ja">編集するテキストのエンコードを選択(デフォルトはUTF-8)</description>
         </option>
         <option>
-            <name>K2editor.sep</name>
+            <name>K2Emacs.sep</name>
             <type>string</type>
         <description>select separator(default /)</description>
         <description lang="ja">プラットフォームに応じたセパレータを設定(デフォルトは/)</description>
@@ -47,7 +47,7 @@ var PLUGIN_INFO =
 		     テキストエリアなどを外部エディタで開きます。
 ==== 起動 ====
 
-次のようにして適当なキーへ K2editor を割り当てます。
+次のようにして適当なキーへ K2Emacs を割り当てます。
 .keysnail.js 内の PRESERVE エリアへ以下のようなスクリプトを張り付けてください。
 >||
 key.setEditKey(["C-c", "e"], function (ev, arg) {
@@ -61,10 +61,10 @@ key.setEditKey(["C-c", "e"], function (ev, arg) {
 なお、デフォルトでは、Linuxの利用を想定した設定となっています。
 以下は、Windowsを使う場合の設定例です。
 >||
-plugins.options["K2editor.editor"]    = "C:\\WINDOWS\\notepad.exe";
-plugins.options["K2editor.ext"]    = "html";
-plugins.options["K2editor.encode"] = "UTF-8"
-plugins.options["K2editor.sep"] = "\\";
+plugins.options["K2Emacs.editor"]    = "C:\\WINDOWS\\notepad.exe";
+plugins.options["K2Emacs.ext"]    = "html";
+plugins.options["K2Emacs.encode"] = "UTF-8"
+plugins.options["K2Emacs.sep"] = "\\";
 ||<
 
                                      ==== 謝辞 ====
@@ -82,7 +82,7 @@ var optionsDefaultValue = {
 };
 
 function getOption(aName) {
-    var fullName = "K2editor." + aName;
+    var fullName = "K2Emacs." + aName;
 
     if (typeof(plugins.options[fullName]) != "undefined")
     {

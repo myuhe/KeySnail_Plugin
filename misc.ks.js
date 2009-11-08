@@ -12,7 +12,7 @@ var PLUGIN_INFO =
     <minVersion>0.9.4</minVersion>
     <include>main</include>
     <provides>
-    <ext>window_focus</ext>
+    <ext>focus_window</ext>
     </provides>
    
     <detail><![CDATA[
@@ -21,7 +21,7 @@ var PLUGIN_INFO =
 		     極私的なスクリプトの集まりです。
 >||
 key.setGlobalKey(["C-c", "w"], function (ev, arg) {
-    ext.exec("window_focus", arg);
+    ext.exec("focus_window", arg);
 }, "ウィンドウにフォーカス", true);
 ||<
 		     ]]></detail>
