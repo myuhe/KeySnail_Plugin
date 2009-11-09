@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">K2Emacs</name>
     <description>K2Emacs</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -282,40 +282,53 @@ var ucjs_ExternalEditor = {
     document.addEventListener("focus", ucjs_ExternalEditor.checkfocus_window, true);
   },
 
-  editfile: function(filename, target){
-	// 外部エディタを起動
-	// var editor = this._editor;
-	var args = this._editor.split(/\s+/);
-	var editor = args.shift();
-	
-    var file = Components.classes["@mozilla.org/file/local;1"].
-        createInstance(Components.interfaces.nsILocalFile);
-    file.initWithPath(editor);
-    if(!file.exists()){
-      alert("Error_invalid_Editor_file");
-      return false;
-    }
-    if(!file.isExecutable()){
-      alert("Error_Editor_not_executable");
-      return false;
-    }
+  editfile: function(filename, target) {
+      // 外部エディタを起動
+      // var editor = this._editor;
+      var args = this._editor.split(/\s+/);
+      var editorPath = args.shift();
+      args.push(filename);
 
-    // setup target info
-    target.setAttribute("encode", this._encode);
-    target.setAttribute("filename", filename);
-    target.setAttribute("timestamp", file.lastModifiedTime);
+      var editorFile;
 
-    // Run the editor.
-    var process = Components.classes["@mozilla.org/process/util;1"].
-        createInstance(Components.interfaces.nsIProcess);
-    process.init(file);
-	//    var args = [filename];
-    args.push([filename]);
+      var xulRuntime = Components.classes["@mozilla.org/xre/app-info;1"]
+          .getService(Components.interfaces.nsIXULRuntime);
+      if ("Darwin" == xulRuntime.OS)
+      {
+          // wrap with open command (inspired from GreaseMonkey)
 
-    process.run(false, args, args.length);
-    return true;
+          args.unshift(editorPath);
+          args.unshift("-a");
+
+          editorFile = Components.classes["@mozilla.org/file/local;1"]
+              .createInstance(Components.interfaces.nsILocalFile);
+          editorFile.followLinks = true;
+          editorFile.initWithPath("/usr/bin/open");
+      }
+      else
+      {
+          try {
+              editorFile = util.openFile(editorPath);
+          } catch (e) {
+              display.notify(util.getLocaleString("editorErrorOccurred"));
+              return;
+          }
+      }
+
+      // setup target info
+      target.setAttribute("encode", this._encode);
+      target.setAttribute("filename", filename);
+      target.setAttribute("timestamp", editorFile.lastModifiedTime);
+
+      var process = Components.classes["@mozilla.org/process/util;1"]
+          .createInstance(Components.interfaces.nsIProcess);
+      process.init(editorFile);
+
+      process.run(false, args, args.length);
+
+      return true;
   },
-
+ 
   //Compose temporary filename
   TmpFilenameTextarea: function(strURL,strName){
     /**
