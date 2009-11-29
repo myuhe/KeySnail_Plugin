@@ -48,7 +48,7 @@ key.setGlobalKey(["C-c", "q"], function (ev, arg) {
 function focus_window (ev, arg) {
     gBrowser.focus();
     _content.focus();
-}, 'コンテンツへフォーカス');
+}
 
 function focus_prompt (ev, arg) {
     var p = document.getElementById("keysnail-prompt");
