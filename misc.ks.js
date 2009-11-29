@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">misc</name>
     <description>misc</description>
     <description lang="ja">misc</description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/misc.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
