@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">タブをKeySnailで制御</description>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -60,23 +60,23 @@ function tanything () {
       actions: [
       [function (aIndex) {
 	 tabs[aIndex].focus();
-       }, "タブを開く"],
+       },M({ja: "このタブを開く", en: "open tab"})],
       [function (aIndex) {
 	 tabs[aIndex].close();
-       }, "タブを閉じる"],
+       }, M({ja: "このタブを閉じる", en: "close tab"})],
       [function (aIndex) {
 	 for (var i = tabs.length - 1; i != aIndex; i--){}
 	 for (i--; i >=0 ; i--){
 	   tabs[i].close();
 
 	   }
-	 }, "左のタブをすべて閉じる"],
+	 }, M({ja: "左のタブをすべて閉じる", en: "open left tab"})],
       [function (aIndex) {
 	 for (var i = tabs.length - 1; i != aIndex; i--)
 	 {
 	   tabs[i].close();
 	 }
-      }, "右のタブをすべて閉じる"],
+      }, M({ja: "右のタブをすべて閉じる", en: "close right tab"})],
       [function (aIndex) {
 	 for (var i = tabs.length - 1; i != aIndex; i--){}
 	 for (i--; i >=0 ; i--){
@@ -87,7 +87,7 @@ function tanything () {
 	 {
 	   tabs[i].close();
 	 }
-      }, "他のタブをすべて閉じる"],
+      }, M({ja: "他のタブをすべて閉じる", en: "close other all tab"})],
       [function (aIndex) {
 	 for (var i = tabs.length - 1; i != aIndex; i--){}
 	 for (i--; i >=0 ; i--){
@@ -101,20 +101,20 @@ function tanything () {
 	     tabs[i].close();
 	   }
 	 }
-      }, "同じドメインのタブをすべて閉じる"],
+      }, M({ja: "同じドメインのタブをすべて閉じる", en: "close same domain tab"})],
 	[function (aIndex) {
 	   var txt = "<a href=\"" + tabs[aIndex].uri.spec + "\">" + tabs[aIndex].document.title + "</a>";
 	   const CLIPBOARD = Components.classes['@mozilla.org/widget/clipboardhelper;1'].getService(Components.interfaces.nsIClipboardHelper);
 	   CLIPBOARD.copyString(txt);
-             }, "タイトルとURLをHTMLタグ付きでクリップボードにコピー"],
+             }, M({ja: "タイトルとURLをHTMLタグ付きでクリップボードにコピー", en: ""})],
 	[function (aIndex) {
 	   var txt = "<a href=\"" + tabs[aIndex].uri.spec + "\">" + "</a>";
 		       const CLIPBOARD = Components.classes['@mozilla.org/widget/clipboardhelper;1'].getService(Components.interfaces.nsIClipboardHelper);
 	   CLIPBOARD.copyString(txt);
-	 },  "URLをHTMLタグ付きでクリップボードにコピー"],
+	 },  M({ja: "URLをHTMLタグ付きでクリップボードにコピー", en: ""})],
       [function (aIndex) {
 	 tabs[aIndex].moveToEnd();
-       }, "タブを末尾に移動する"]
+       }, M({ja: "タブを末尾に移動する", en: ""})]
        ]
 		  });
        }
