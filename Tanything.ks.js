@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">タブをKeySnailで制御</description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -37,7 +37,7 @@ key.setViewKey("a", function (ev, arg) {
 // ================ Key Bindings ====================== //
 
 
-function tany () {
+function tanything () {
   var promptList = [];
   var w = Application.activeWindow;
   var tabs = Array.apply(null, w.tabs);
