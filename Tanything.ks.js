@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">タブをKeySnailで制御</description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -13,7 +13,7 @@ var PLUGIN_INFO =
     <minVersion>0.9.4</minVersion>
     <include>main</include>
     <provides>
-    <ext>edit_text</ext>
+    <ext>tanything</ext>
     </provides>
     <detail><![CDATA[
 
@@ -25,7 +25,7 @@ var PLUGIN_INFO =
 .keysnail.js へ以下のようなスクリプトを張り付けてください。
 >||
 key.setViewKey("a", function (ev, arg) {
-    ext.exec("edit_text", arg);
+    ext.exec("tanything", arg);
 }, "タブを一覧表示", true);
 ||<
 
@@ -118,6 +118,6 @@ function tany () {
        ]
 		  });
        }
-ext.add("tany", tany,
+ext.add("tanything", tanything,
         M({ja: "タブを一覧表示",
 		    en: "view all tabs "}));
