@@ -1222,8 +1222,9 @@ RTM.tasks = function(){
 
 
 
-//function rtklogin (directObject, mods) {
-function rtklogin () {
+function rtklogin (directObject, mods) {
+//function rtklogin () {
+    window.alert("test");
     if (RTM.check_token()) {
         display.echoStatus(M({en: "Valid Token found. Please logout first.", ja: "トークンはすでに取得しています。"}));
        // displayMessage({icon: RTM.constants.url.ICON_URL, title: this.msg_title, text: 'Valid Token found. Please logout first.'});
