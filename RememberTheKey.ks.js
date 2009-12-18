@@ -33,7 +33,7 @@ var PLUGIN_INFO =
     <ext>rtklogin</ext>
     </provides>
     <require>
-        <script>http://github.com/mooz/keysnail/raw/master/plugins/lib/oauth.js</script>
+        <script>http://github.com/myuhe/KeySnail_Plugin/raw/master/jquery.js</script>
     </require>
     <detail><![CDATA[
                        ==== 機能 ====
