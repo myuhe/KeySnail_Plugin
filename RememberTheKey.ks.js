@@ -21,7 +21,7 @@ var PLUGIN_INFO =
     <name lang="ja">RememberTheKey</name>
     <description>RememberTheKey</description>
     <description lang="ja">RTMを操作</description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/RememberTheKey.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -32,6 +32,9 @@ var PLUGIN_INFO =
     <provides>
     <ext>rtklogin</ext>
     </provides>
+    <require>
+        <script>http://github.com/mooz/keysnail/raw/master/plugins/lib/oauth.js</script>
+    </require>
     <detail><![CDATA[
                        ==== 機能 ====
                        タブをKeySnailから制御します。
