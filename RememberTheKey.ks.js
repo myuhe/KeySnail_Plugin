@@ -1357,12 +1357,12 @@ RTM.login = function() {
     };
     var authUrl = RTM.constants.url.AUTH_URL + RTM.create_rtm_parameter_string(authParams, false);
 
-    //Utils.openUrlInBrowser(authUrl);
+    Utils.openUrlInBrowser(authUrl);
              var xhr = new XMLHttpRequest();
             // var endPoint = "http://tinyurl.com/api-create.php?url=" + aURL;
-             xhr.mozBackgroundRequest = true;
-             xhr.open("GET", authUrl, false);
-             xhr.send(null);
+             // xhr.mozBackgroundRequest = true;
+             // xhr.open("GET", authUrl, false);
+             // xhr.send(null);
 
             // return xhr.responseText;
 };
