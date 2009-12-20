@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">タブをKeySnailで制御</description>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -59,7 +59,9 @@ function tanything () {
     },
       actions: [
       [function (aIndex) {
-	 tabs[aIndex].focus();
+	  tabs[aIndex].focus();
+          gBrowser.focus();
+          _content.focus();
        },M({ja: "このタブを開く", en: "open tab"})],
       [function (aIndex) {
 	 tabs[aIndex].close();
