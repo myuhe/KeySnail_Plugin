@@ -1239,23 +1239,10 @@ RTM.tasks = function(){
 
 
                      function rtkupdate (directObject, mods) {
-                         // if (!RTM.check_token()) {
-                         //     displayMessage({icon: RTM.constants.url.ICON_URL, title: this.msg_title, text: RTM.constants.msg.LOGGING_IN_MSG});
-                         //     RTM.login();
-                         //     return;
-                         // }
-                         
-                         // if (!RTM.tasks.get_tasks(false)) {
-                         //    // displayMessage({icon: RTM.constants.url.ICON_URL, title: this.msg_title, text: 'Syncing with RTM.'});
-                         //     RTM.lists.update();        
-                         //     RTM.tasks.force_update_all();
-                         //    // displayMessage({icon: RTM.constants.url.ICON_URL, title: this.msg_title, text: 'Sync with RTM complete.'});
-                         //     return;
-                         // }
+
                          RTM.lists.update();        
                          //RTM.tasks.force_update_all();
                          var tasks = RTM.tasks.get_tasks(false);
-                         window.alert(RTM.lists._lists);
 
                          //var task = ".*"+directObject.text.replace(/^\s+|\s+$/g,"")+".*";
                          window.alert("first_show");
@@ -1265,12 +1252,8 @@ RTM.tasks = function(){
                          // var tag = mods.tag.text || null;
                          // var subTasks = RTM.tasks.findMatchingTasks(task, list, priority, tag);
                          //subTasks.sort(RTM.utils.sort_tasks_algorithm);
-                         // window.alert(subtasks);
-                         // for  ( item in items) {
-                         //     promptList.push([items]);
-                         //     window.alert(item.list_id);
-
-                         // }
+                         // 
+                         // 
                          // prompt.selector({
                          //                     message: "select tab: ",
                          //                     flags: [ 0],
@@ -1284,8 +1267,9 @@ RTM.tasks = function(){
                          //                 });
                        //  window.alert(items[1].list_id);
                          //nowedit
-                         mylists = RTM.lists._lists;
-                         
+                        var mylists = RTM.lists._get_lists;
+                         window.alert(tasks);
+                         window.alert(mylists._lists);
                          if (! _lists) {
                              window.alert("nodata");
                                          }

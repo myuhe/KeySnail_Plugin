@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">タブをKeySnailで制御</description>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -42,7 +42,11 @@ function tanything () {
   var w = Application.activeWindow;
   var tabs = Array.apply(null, w.tabs);
   for each (var tab in tabs) {
+       if (!tab.uri.host) {
+    favic = "chrome://keysnail/skin/notify-icon16.png";
+                 } else {
     favic = "http://" + tab.uri.host + "/favicon.ico";
+                     }
     promptList.push([favic, tab.document.title, tab.uri.spec]);
   }
 

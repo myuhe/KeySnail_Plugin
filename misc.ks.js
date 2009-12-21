@@ -40,6 +40,10 @@ key.setGlobalKey(["C-c", "q"], function (ev, arg) {
     ext.exec("readability", arg);
 }, "readability", true);
 
+key.setGlobalKey(["C-c", "p"], function (ev, arg) {
+    ext.exec("toggle_tabbar", arg);
+}, "readability", true);
+
 
 ||<
 		     ]]></detail>
@@ -79,6 +83,9 @@ function readability (){
     y.media='screen';
     content.document.getElementsByTagName('head')[0].appendChild(y);
     }
+function toggle_tabbar() {
+style.toggle(".tabbrowser-strip{ display:none; }");
+}
 
 
 ext.add("focus_window", focus_window,
@@ -100,3 +107,7 @@ ext.add("remove_Caret", remove_Caret,
 ext.add("readability", readability,
         M({ja: "readabilityスタート",
 		    en: "start readability"}));
+
+ext.add("toggle_tabbar", toggle_tabbar,
+        M({ja: "タブバーの表示をトグル",
+		    en: "toggle tabbar"}));
