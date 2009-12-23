@@ -22,7 +22,7 @@ var PLUGIN_INFO =
                        ==== 起動 ====
 
                    適当なキーへ Tanythingを割り当てます。
-                       .keysnail.js へ以下のようなスクリプトを張り付けてください。
+                       .keysnail.js へ以下のようなスクリプトを張り付けてください。以下の例では"a"に割り当ててます。
                        >||
                        key.setViewKey("a", function (ev, arg) {
                                           ext.exec("tanything", arg);
@@ -43,7 +43,7 @@ var PLUGIN_INFO =
                            "g"     : "prompt-beginning-of-candidates",
                            "G"     : "prompt-end-of-candidates",
                            "D"     : "prompt-cancel",
-                           // twitter client specific actions
+                           // Tanything specific actions
                            "O"     : "localOpen",
                            "q"     : "localClose",
                            "p"     : "localLeftclose",
@@ -52,11 +52,9 @@ var PLUGIN_INFO =
                            "d"     : "localDomainclose",
                            "c"     : "localClipUT",
                            "C"     : "localClipU",
-                           "m"     : "localMovetoend",
+                           "e"     : "localMovetoend",
                        };
                        ||<
-
-                   どのようなキーバインドとなっているかは、設定を見ていただければ分かるかと思います。気に入らなければ変更してしまってください。
 
                    このままではアルファベットが入力できないので、もし絞り込み健作などでアルファベットを入力したくなった場合は C-z を入力するか「閉じる」ボタン左の「地球マーク」をクリックし、編集モードへと切り替えてください。
 
@@ -84,45 +82,41 @@ function getOption(aName) {
 
 var tanything =
     (function () {
-        var deleteNO = 0;
-         var w = Application.activeWindow;
-         var tabs = Array.apply(null, w.tabs);
-         
          var tanythingAction = [
              [function (aIndex) {
                   //if (aIndex)
                       open(aIndex);
-                       },M({ja: "このタブを開く", en: ""}) + "open tab","localOpen,c"],
+                       },M({ja: "このタブを開く : ", en: ""}) + "open tab","localOpen,c"],
              [function (aIndex) {
                   //if (aIndex)
                       close(aIndex);
-                       }, M({ja: "このタブを閉じる", en: ""}) + "close tab", "localClose,c"],
+                       }, M({ja: "このタブを閉じる : ", en: ""}) + "close tab", "localClose,c"],
              [function (aIndex) {
                   leftclose(aIndex);
-              }, M({ja: "左のタブをすべて閉じる", en: ""}) + "close left tab", "localLeftclose,c"],
+              }, M({ja: "左のタブをすべて閉じる : ", en: ""}) + "close left tab", "localLeftclose,c"],
              [
                  function (aIndex) {
                      rightclose(aIndex);
                  }
-                 , M({ja: "右のタブをすべて閉じる", en: ""}) + "close right tab", "localRightclose,c"],
+                 , M({ja: "右のタブをすべて閉じる : ", en: ""}) + "close right tab", "localRightclose,c"],
              [function (aIndex) {
                   allclose(aIndex);
-              }, M({ja: "他のタブをすべて閉じる", en: ""}) + "close other all tab", "localAllclose,c"],
+              }, M({ja: "他のタブをすべて閉じる : ", en: ""}) + "close other all tab", "localAllclose,c"],
              [function (aIndex) {
                   domainclose(aIndex);
-              }, M({ja: "同じドメインのタブをすべて閉じる", en: ""}) + "close same domain tab", "localDomainclose,c"],
+              }, M({ja: "同じドメインのタブをすべて閉じる : ", en: ""}) + "close same domain tab", "localDomainclose,c"],
              [function (aIndex) {
                   if (aIndex)
                       clipUT(aIndex);
-              }, M({ja: "URLとタイトルをHTMLタグ付きでクリップボードにコピー", en: ""}) + "copy URL and title", "localClipUT,c"],
+              }, M({ja: "URLとタイトルをHTMLタグ付きでクリップボードにコピー : ", en: ""}) + "copy URL and title", "localClipUT,c"],
              [function (aIndex) {
                   if (aIndex)
                       clipU(aIndex);
-              },  M({ja: "URLをHTMLタグ付きでクリップボードにコピー", en: ""}) + "copy URL","localClipU,c"],
+              },  M({ja: "URLをHTMLタグ付きでクリップボードにコピー : ", en: ""}) + "copy URL","localClipU,c"],
              [function (aIndex) {
                   if (aIndex)
                       movetoend();
-              }, M({ja: "タブを末尾に移動する", en: ""}) + "move to end", "localMovetoend,c"]
+              }, M({ja: "タブを末尾に移動する : ", en: ""}) + "move to end", "localMovetoend,c"]
          ];
          
          function callSelector() {
@@ -172,9 +166,11 @@ var tanything =
          function close(aIndex) {
               var w = Application.activeWindow;
              var tabs = Array.apply(null, w.tabs);
-             tabs[aIndex].close();
-             // deleteNO++;
-             //window.alert(deleteNO);
+               for (var i = tabs.length - 1; i != -1; i--){
+             if(tabs[i].uri.spec == tabs[aIndex].uri.spec){
+                     tabs[i].close();
+               }
+             }
         }
          function leftclose (aIndex) {
              var w = Application.activeWindow;
@@ -249,6 +245,8 @@ var tanything =
          var self = {
              showAlltab: function(){
                  callSelector();
+                         //var spec = Array.apply(null, Application.activeWindow.tabs);
+                         //window.alert(spec[1].uri.spec);
              }
          };
          
