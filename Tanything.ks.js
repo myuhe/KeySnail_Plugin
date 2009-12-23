@@ -115,7 +115,7 @@ var tanything =
               },  M({ja: "URLをHTMLタグ付きでクリップボードにコピー : ", en: ""}) + "copy URL","localClipU,c"],
              [function (aIndex) {
                   if (aIndex)
-                      movetoend();
+                      movetoend(aIndex);
               }, M({ja: "タブを末尾に移動する : ", en: ""}) + "move to end", "localMovetoend,c"]
          ];
          
