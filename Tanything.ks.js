@@ -7,7 +7,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">KeySnailからタブを操作</description>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -154,7 +154,13 @@ var tanything =
               },  M({ja: "URLをHTMLタグ付きでクリップボードにコピー : ", en: ""}) + "copy URL", "localClipU,c"],
              [function (aIndex) {
                   if (aIndex >= 0) movetoend(aIndex);
-              }, M({ja: "タブを末尾に移動する : ", en: ""}) + "move to end", "localMovetoend,c"]
+              }, M({ja: "タブを末尾に移動する : ", en: ""}) + "move to end", "localMovetoend,c"],
+             [function (aIndex) {
+                  if (aIndex >= 0) movetostart(aIndex);
+              }, M({ja: "タブを先頭に移動する : ", en: ""}) + "move to start", "localMovetostart,c"],
+             [function (aIndex) {
+                  if (aIndex >= 0) addToBookmarks(aIndex);
+              }, M({ja: "タブをブックマークに追加 : ", en: ""}) + "add selected tab to bookmarks", "localAddBokmark,c"]
          ];
 
          function getTabs() Array.slice(getBrowser().mTabContainer.childNodes);
@@ -178,15 +184,14 @@ var tanything =
          }
 
          function open(aIndex) {
-             var tabs = getTabs();
-
-             tabs[aIndex].focus();
+             getBrowser().mTabContainer.selectedIndex = aIndex;
              _content.focus();
          }
 
          function close(aIndex) {
              if (currentCollection.length === 1)
              {
+                 prompt.finish(true);
                  return;
              }
 
@@ -263,9 +268,36 @@ var tanything =
          }
 
          function movetoend(aIndex) {
-             var w = Application.activeWindow;
-             var tabs = Array.apply(null, w.tabs);
-             tabs[aIndex].moveToEnd();
+             let browser = getBrowser();
+             let tabs    = getTabs();
+
+             browser.moveTabTo(tabs[aIndex], tabs.length - 1);
+
+             let selected = currentCollection[aIndex].slice(0);
+             currentCollection.splice(aIndex, 1);
+             currentCollection.push(selected);
+
+             prompt.refresh(tabs.length - 1);
+         }
+
+         function movetostart(aIndex) {
+             let browser = getBrowser();
+             let tabs    = getTabs();
+
+             browser.moveTabTo(tabs[aIndex], 0);
+
+             let selected = currentCollection[aIndex].slice(0);
+             currentCollection.splice(aIndex, 1);
+             currentCollection.unshift(selected);
+
+             prompt.refresh(0);
+         }
+
+         function addToBookmarks(aIndex) {
+             let tab = getTabs()[aIndex];
+
+             [title, uri] = [tab.linkedBrowser.contentDocument.title, getURIFromTab(tab)];
+             PlacesUIUtils.showAddBookmarkUI(uri, title);
          }
 
          var self = {
