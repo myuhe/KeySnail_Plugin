@@ -7,7 +7,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">KeySnailからタブを操作</description>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -105,7 +105,7 @@ plugins.options["tanything_opt.keymap"] = {
 };
 ||<
 
-このままではアルファベットが入力できないので、もし絞り込み健作などでアルファベットを入力したくなった場合は C-z を入力するか「閉じる」ボタン左の「地球マーク」をクリックし、編集モードへと切り替えてください。
+このままではアルファベットが入力できないので、もし絞り込み検索などでアルファベットを入力したくなった場合は C-z を入力するか「閉じる」ボタン左の「地球マーク」をクリックし、編集モードへと切り替えてください。
 ]]></detail>
 </KeySnailPlugin>;
 
@@ -174,18 +174,25 @@ var tanything =
                                   for each (tab in getTabs())];
 
              prompt.selector({
-                                 message    : "select tab: ",
-                                 flags      : [ICON | IGNORE, 0, 0],
-                                 collection : currentCollection,
-                                 header     : ["title", "url"],
-                                 keymap     : getOption("keymap"),
-                                 actions    : tanythingAction
+                                 message             : "select tab: ",
+                                 initialIndex        : getBrowser().mTabContainer.selectedIndex,
+                                 flags               : [ICON | IGNORE, 0, 0],
+                                 collection          : currentCollection,
+                                 header              : ["title", "url"],
+                                 keymap              : getOption("keymap"),
+                                 actions             : tanythingAction,
+                                 supressRecoverFocus : true,
+                                 onFinish            : focusContent
                              });
+         }
+
+         function focusContent() {
+             getBrowser().focus();
+             _content.focus();
          }
 
          function open(aIndex) {
              getBrowser().mTabContainer.selectedIndex = aIndex;
-             _content.focus();
          }
 
          function close(aIndex) {
@@ -236,17 +243,31 @@ var tanything =
          function getURIFromTab(aTab) aTab.linkedBrowser.currentURI;
 
          function domainclose(aIndex) {
-             let tabs        = getTabs();
-             let selectedURI = getURIFromTab(tabs[aIndex]);
-
-             for (let i = 0; i < tabs.length; ++i)
-             {
-                 if (/* i !== aIndex && */ selectedURI.host === getURIFromTab(tabs[i]).host)
-                 {
-                     getBrowser().removeTab(tabs[i]);
-                     currentCollection.splice(i, 1);
+             function getHost(aNsURI) {
+                 try {
+                     return aNsURI.host;
+                 } catch (e) {
+                     return "";
                  }
              }
+
+             let tabs        = getTabs();
+             let selectedURI = getURIFromTab(tabs[aIndex]);
+             let host        = getHost(selectedURI);
+
+             if (host)
+             {
+                 for (let i = tabs.length - 1; i >= 0; --i)
+                 {
+                     if (host === getHost(getURIFromTab(tabs[i])))
+                     {
+                         getBrowser().removeTab(tabs[i]);
+                         currentCollection.splice(i, 1);
+                     }
+                 }
+             }
+
+             prompt.refresh();
          }
 
          function clipUT(aIndex) {
