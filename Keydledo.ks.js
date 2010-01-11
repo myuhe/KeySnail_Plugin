@@ -13,7 +13,7 @@ var PLUGIN_INFO =
     <license lang="ja">MIT ライセンス</license>
     <minVersion>1.2.7</minVersion>
     <include>main</include>
-    <provides>  
+    <provides>
     <ext>Keydledo_param</ext>
     </provides>
     <detail><![CDATA[
@@ -40,7 +40,7 @@ key.setViewKey("d", function (ev, arg) {
                        >||
 plugins.options["Keydledo_opt.keymap"] = {
     "C-z"   : "prompt-toggle-edit-mode",
-    "SPC"   : "prompt-next-page", 
+    "SPC"   : "prompt-next-page",
     "b"     : "prompt-previous-page",
     "j"     : "prompt-next-completion",
     "k"     : "prompt-previous-completion",
@@ -49,15 +49,15 @@ plugins.options["Keydledo_opt.keymap"] = {
     "D"     : "prompt-cancel",
     // Keydledo client specific actions
     "d"     : "ToDo_done",　//ToDoを完了する。
-    "D"     : "delete_ToDo" //ToDoを削除する。                      
+    "D"     : "delete_ToDo" //ToDoを削除する。
         ||<
         ==== ToDoの追加 ====
         以上の設定を行った場合、"d"キーを押すとプロンプトが起動します。まずはToDoの内容を入力しましょう。その後はtag,期日の入力フォームが起動します。tagと期日は補完機能があります。TABキーを押せば補完候補が出てくるので選択してください。
 
         ==== ToDoのリスト表示 ====
         以上の設定を行った場合、"C-c　d"キーを押すとリストが表示されます。"C-i"　キーを押すことでリストの編集等いろいろなアクションを選択できます。また、このアクション選択後もtagや期日はTABキーを押すことで補完候補を表示することが可能です。
-    
-    
+
+
                ]]></detail>
     </KeySnailPlugin>;
 var optionsDefaultValue = {
@@ -67,7 +67,7 @@ var optionsDefaultValue = {
 
 function getOption(aName) {
     var fullName = "Keydledo_opt." + aName;
-    if (typeof plugins.options[fullName] !== "undefined") 
+    if (typeof plugins.options[fullName] !== "undefined")
     {
         return plugins.options[fullName];
     }
@@ -130,7 +130,7 @@ var Keydledo =
             [function (aIndex) {
                   if (aIndex >= 0) delete_ToDo(aIndex);
               }, M({ja: "ToDoを削除する : ", en: ""}) + "delete ToDO", "delete_ToDo,c"]
-             
+
          ];
 
          let tPrompt = {
@@ -152,8 +152,8 @@ var Keydledo =
          };
 
          function callSelector() {
-             var promptList = 
-                 function(collection){
+             var promptList =
+                 (function(){
                      var tmpList =[];
                      var xhr = new XMLHttpRequest;
                      var url = "http://api.toodledo.com/api.php?method=getTasks;notcomp=1;key=" + MD5_sig;
@@ -169,7 +169,7 @@ var Keydledo =
                          catch(e){
                              var tmp_data = "";
                          }
-                         return tmp_data; 
+                         return tmp_data;
                      }
                      for (var i = 0; i < task_node.length; i++) {
                          var    id       = get_each_data(i,"id");
@@ -235,11 +235,11 @@ var Keydledo =
                              priority ="";
                          }
                          var    note     = get_each_data(i,"note");
-                         
+
                          tmpList.push([title,tag,folder,status,duedate,priority]);
                      }
                      return tmpList;
-                 };
+                 })();
              prompt.selector({
                                  message: "ToDo list: ",
                                  flags: [0 , 0, 0, 0, 0, 0],
@@ -253,18 +253,35 @@ var Keydledo =
                                  },
                                  width: [45, 20, 15,15,15,15],
                                  keymap :getOption("keymap"),
-                                 actions:KeydledoAction
+                                 actions:KeydledoAction,
+                                 stylist: function (row, n, current) {
+                                     if (current !== promptList)
+                                     {
+                                         // nothing to do in action mode
+                                         return null;
+                                     }
+
+                                     let [title, tag, folder, status, duedate, priority] = row;
+
+                                     return "color:" + {
+                                         "Negative" : "gray",
+                                         "Low"      : "##09009f;",
+                                         "Medium"   : "black",
+                                         "High"     : "#9f0300;",
+                                         "Top"      : "#ff0400;font-weight:bold;"
+                                     }[priority] || "black;";
+                                 }
                              });
          }
-         
+
          try {
              var alertsService = Cc['@mozilla.org/alerts-service;1'].getService(Ci.nsIAlertsService);
          } catch (x) {
              popUpStatusWhenUpdated = false;
          }
 
-         var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator); 
-         
+         var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
+
          function showPopup(arg) {
              if (false /* plugins.lib.xulGrowl */)
              {
@@ -311,20 +328,20 @@ var Keydledo =
                  showPopup({
                                title   : M({ja: "ToDo完了！！", en: "Done!!"}),
                                message : M({ja: "おつかれさまでした！！",
-                                            en: "Waohhh"}) 
+                                            en: "Waohhh"})
                            });
              }
              else{
                  showPopup({
                                title   : M({ja: "ごめんなさい。。。", en: "sorry..."}),
                                message : M({ja: "同期に失敗しました",
-                                            en: "failed sync"}) 
+                                            en: "failed sync"})
                            });
              }
               prompt.refresh();
          }
-         
-         
+
+
          function tag_ToDo (aIndex) {
              var xhr = new XMLHttpRequest;
              var url = "http://api.toodledo.com/api.php?method=getTasks;notcomp=1;key=" + MD5_sig;
@@ -341,13 +358,13 @@ var Keydledo =
                  catch(e){
                      var tmp_data = "none";
                  }
-                 return tmp_data; 
+                 return tmp_data;
              }
              for (var i = 0; i < task_node.length; i++) {
                  var    tag      = get_each_data(i,"tag");
                  tag_list.push(tag);
              }
-             
+
              function uniq(arr) {
                  var o = {};
                  return Array.filter(arr,
@@ -363,7 +380,7 @@ var Keydledo =
                                  + ";tag=" + encode_value;
                              edit_xhr.open("GET", edit_url, false);
                              edit_xhr.send("");
-                             var edit_xml = edit_xhr.responseXML;     
+                             var edit_xml = edit_xhr.responseXML;
                              if (edit_xml.getElementsByTagName("success")[0].firstChild.nodeValue == 1){
                                  showPopup({
                                                title   : M({ja: "編集完了", en: "Done!!"}),
@@ -374,12 +391,12 @@ var Keydledo =
                                  showPopup({
                                                title   : M({ja: "ごめんなさい。。。", en: "sorry..."}),
                                                message : M({ja: "同期に失敗しました",
-                                                            en: "failed sync"}) 
+                                                            en: "failed sync"})
                                            });
                              }
                          },null,uniq_tag);
          }
-         
+
          function duedate_ToDo (aIndex) {
              var xhr = new XMLHttpRequest;
              var url = "http://api.toodledo.com/api.php?method=getTasks;notcomp=1;key=" + MD5_sig;
@@ -402,7 +419,7 @@ var Keydledo =
                  var date = next_day.getDate();
                  var date_unix = year + "-" + mon + "-" + date ;
                  date_list.push(date_unix);
-             }             
+             }
              prompt.read("duedate:", function (aTweet) {
                              var encode_value = encodeURIComponent(aTweet);
                              var edit_xhr = new XMLHttpRequest;
@@ -411,7 +428,7 @@ var Keydledo =
                                  + ";duedate=" + encode_value;
                              edit_xhr.open("GET", edit_url, false);
                              edit_xhr.send("");
-                             var edit_xml = edit_xhr.responseXML;     
+                             var edit_xml = edit_xhr.responseXML;
                              if (edit_xml.getElementsByTagName("success")[0].firstChild.nodeValue == 1){
                                  showPopup({
                                                title   : M({ja: "編集完了", en: "Done!!"}),
@@ -422,12 +439,12 @@ var Keydledo =
                                  showPopup({
                                                title   : M({ja: "ごめんなさい。。。", en: "sorry..."}),
                                                message : M({ja: "同期に失敗しました",
-                                                            en: "failed Sync"}) 
+                                                            en: "failed Sync"})
                                            });
                              }
                          },null,date_list);
          }
-         
+
          function priority_ToDo (aIndex) {
                          var xhr = new XMLHttpRequest;
              var url = "http://api.toodledo.com/api.php?method=getTasks;notcomp=1;key=" + MD5_sig;
@@ -445,7 +462,7 @@ var Keydledo =
                                  + ";tag=" + encode_value;
                              edit_xhr.open("GET", edit_url, false);
                              edit_xhr.send("");
-                             var edit_xml = edit_xhr.responseXML;     
+                             var edit_xml = edit_xhr.responseXML;
                              if (edit_xml.getElementsByTagName("success")[0].firstChild.nodeValue == 1){
                                  showPopup({
                                                title   : M({ja: "編集完了", en: "Done!!"}),
@@ -456,12 +473,12 @@ var Keydledo =
                                  showPopup({
                                                title   : M({ja: "ごめんなさい。。。", en: "sorry..."}),
                                                message : M({ja: "同期に失敗しました",
-                                                            en: "failed sync"}) 
+                                                            en: "failed sync"})
                                            });
                              }
-                         }); 
+                         });
          }
-         
+
          function title_ToDo (aIndex) {
                          var xhr = new XMLHttpRequest;
              var url = "http://api.toodledo.com/api.php?method=getTasks;notcomp=1;key=" + MD5_sig;
@@ -479,7 +496,7 @@ var Keydledo =
                                  + ";tag=" + encode_value;
                              edit_xhr.open("GET", edit_url, false);
                              edit_xhr.send("");
-                             var edit_xml = edit_xhr.responseXML;     
+                             var edit_xml = edit_xhr.responseXML;
                              if (edit_xml.getElementsByTagName("success")[0].firstChild.nodeValue == 1){
                                  showPopup({
                                                title   : M({ja: "編集完了", en: "Done!!"}),
@@ -490,12 +507,12 @@ var Keydledo =
                                  showPopup({
                                                title   : M({ja: "ごめんなさい。。。", en: "sorry..."}),
                                                message : M({ja: "同期に失敗しました",
-                                                            en: "failed sync"}) 
+                                                            en: "failed sync"})
                                            });
                              }
-                         }); 
+                         });
          }
-         
+
          function delete_ToDo (aIndex) {
              var xhr = new XMLHttpRequest;
              var url = "http://api.toodledo.com/api.php?method=getTasks;notcomp=1;key=" + MD5_sig;
@@ -513,20 +530,20 @@ var Keydledo =
                  showPopup({
                                title   : M({ja: "ToDo削除！！", en: "Done!!"}),
                                message : M({ja: "おつかれさまでした！！",
-                                            en: "Waohhh"}) 
+                                            en: "Waohhh"})
                            });
              }
              else{
                  showPopup({
                                title   : M({ja: "ごめんなさい。。。", en: "sorry..."}),
                                message : M({ja: "同期に失敗しました",
-                                            en: "failed sync"}) 
+                                            en: "failed sync"})
                            });
              }
               prompt.refresh(0);
          }
-         
-         
+
+
          var self = {
              show_ToDolist: function(){
                  callSelector();
@@ -541,7 +558,7 @@ var Keydledo =
                      }
                      return true;
                  }
-                 
+
                      var now = new Date();
                      var nYear = now.getFullYear();
                      var nMonth = now.getMonth() + 1;
@@ -568,7 +585,7 @@ var Keydledo =
                      catch(e){
                          var tmp_data = "none";
                      }
-                     return tmp_data; 
+                     return tmp_data;
                  }
                  for (var i = 0; i < task_node.length; i++) {
                      var    tag      = get_each_data(i,"tag");
@@ -596,11 +613,11 @@ var Keydledo =
                                              + ";title=" + encode_title + ";tag=" + encode_tag;
                                          edit_xhr.open("GET", edit_url, false);
                                          edit_xhr.send("");
-                                         var edit_xml = edit_xhr.responseXML;     
+                                         var edit_xml = edit_xhr.responseXML;
                                          if (edit_xml.getElementsByTagName("added")[0].firstChild.nodeValue != null){
                                              showPopup({
                                                            title   : M({ja: "ToDo追加完了", en: "Done!!"}),
-                                                           message : M({ja: "ToDo: ",en: ""}) + 
+                                                           message : M({ja: "ToDo: ",en: ""}) +
                                                                encode_title + M({ja: "を追加しました。",en: ""})
                                                        });
                                          }
@@ -608,19 +625,19 @@ var Keydledo =
                                              showPopup({
                                                            title   : M({ja: "ごめんなさい。。。", en: "sorry..."}),
                                                            message : M({ja: "同期に失敗しました",
-                                                                        en: "failed sync"}) 
+                                                                        en: "failed sync"})
                                                        });
                                          }
                                      },null,date_list);
-                             },null,uniq_tag);     
+                             },null,uniq_tag);
                      });
              }
          };
     //};
-    
-         
+
+
          return self;
-         
+
      })();
 
 
@@ -644,7 +661,7 @@ ext.add("post_ToDo", Keydledo.post,
 
 
 
-/* 
+/*
  * MD5 Hashing Algorithm taken, with thanks, from Paul Johnston.
  * Packed to save space using Dean Edwards' Packer: http://dean.edwards.name/packer/
  *
