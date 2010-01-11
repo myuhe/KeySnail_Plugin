@@ -57,12 +57,50 @@ plugins.options["Keydledo_opt.keymap"] = {
         ==== ToDoのリスト表示 ====
         以上の設定を行った場合、"C-c　d"キーを押すとリストが表示されます。"C-i"　キーを押すことでリストの編集等いろいろなアクションを選択できます。また、このアクション選択後もtagや期日はTABキーを押すことで補完候補を表示することが可能です。
 
+==== 見た目のカスタマイズ ====
 
+例えば次のような設定を行っておくと、 priority の値に応じて ToDo の色を変えることが可能です。
+
+>||
+plugins.options["Keydledo_opt.stylist"] = 
+    function ([title, tag, folder, status, duedate, priority], n) {
+        return "color:" + {
+            "Negative" : "gray",
+            "Low"      : "#3b34b1;",
+            "Medium"   : "black",
+            "High"     : "#9f0300;text-decoration:underline;",
+            "Top"      : "#ff0400;font-weight:bold;"
+        }[priority] || "black;";
+    };
+||<
+
+もし priority の列だけ色を変えたいのであれば、次のようにすれば良いでしょう。
+
+>||
+plugins.options["Keydledo_opt.stylist"] = 
+    function ([title, tag, folder, status, duedate, priority], n) {
+        if (n === 5)
+        {
+            return "color:" + {
+                "Negative" : "gray",
+                "Low"      : "#3b34b1;",
+                "Medium"   : "black",
+                "High"     : "#9f0300;text-decoration:underline;",
+                "Top"      : "#ff0400;font-weight:bold;"
+            }[priority] || "black;";            
+        }
+
+        return null;
+    };
+||<
+
+これを応用すれば、 duedate の値を見て「期日が近づいてきたもの」を目立たせたりすることも可能です。
                ]]></detail>
     </KeySnailPlugin>;
 var optionsDefaultValue = {
-    "keymap" : {},
-    "Keydledo_id" : "input your id"
+    "keymap"      : {},
+    "Keydledo_id" : "input your id",
+    "stylist"     : null
 };
 
 function getOption(aName) {
@@ -241,36 +279,29 @@ var Keydledo =
                      return tmpList;
                  })();
              prompt.selector({
-                                 message: "ToDo list: ",
-                                 flags: [0 , 0, 0, 0, 0, 0],
-                                 collection: promptList,
-                                 header: ["title", "tag","folder","status","duedate","priority"],
-                                 callback: function (index) {
+                                 message    : "ToDo list: ",
+                                 flags      : [0 , 0, 0, 0, 0, 0],
+                                 collection : promptList,
+                                 header     : ["title", "tag","folder","status","duedate","priority"],
+                                 callback   : function (index) {
                                      if (index < 0 || promptList.length < index) {
                                          return;
                                      }
 
                                  },
-                                 width: [45, 20, 15,15,15,15],
-                                 keymap :getOption("keymap"),
-                                 actions:KeydledoAction,
-                                 stylist: function (row, n, current) {
-                                     if (current !== promptList)
-                                     {
-                                         // nothing to do in action mode
-                                         return null;
+                                 width   : [45, 20, 15,15,15,15],
+                                 keymap  : getOption("keymap"),
+                                 actions : KeydledoAction,
+                                 stylist : getOption("stylist") ?
+                                     function (row, n, current) {
+                                         if (current !== promptList)
+                                             return null;
+
+                                         let func = getOption("stylist");
+
+                                         return typeof func === "function" ? func(row, n) : null;
                                      }
-
-                                     let [title, tag, folder, status, duedate, priority] = row;
-
-                                     return "color:" + {
-                                         "Negative" : "gray",
-                                         "Low"      : "##09009f;",
-                                         "Medium"   : "black",
-                                         "High"     : "#9f0300;",
-                                         "Top"      : "#ff0400;font-weight:bold;"
-                                     }[priority] || "black;";
-                                 }
+                                 : null
                              });
          }
 
@@ -370,7 +401,7 @@ var Keydledo =
                  return Array.filter(arr,
                                      function(i) i in o? false: o[i] = true);
              };
-             uniq_tag = uniq(tag_list);
+             let uniq_tag = uniq(tag_list);
              tPrompt.close();
              prompt.read("tag:", function (aTweet) {
                              var encode_value = encodeURIComponent(aTweet);
@@ -591,34 +622,36 @@ var Keydledo =
                      var    tag      = get_each_data(i,"tag");
                      tag_list.push(tag);
                  }
-                                                             function uniq(arr) {
-                                                var o = {};
-                                                return Array.filter(arr,
-                                                function(i) i in o? false: o[i] = true);
-                                            };
-                                         uniq_tag = uniq(tag_list);
+                 function uniq(arr) {
+                     var o = {};
+                     return Array.filter(arr,
+                                         function(i) i in o? false: o[i] = true);
+                 };
+                 let uniq_tag = uniq(tag_list);
                  prompt.read(
-                     "title:", function (aVa) {
+                     M({ja: "タイトル:", en: "title:"}), function (aVa) {
                          let title = aVa;
                          prompt.read(
-                             "tag:", function (aVa) {
+                             M({ja: "タグ:", en: "tag:"}), function (aVa) {
+                                 let tag = aVa;
                                  prompt.read(
-                                     "duedate:", function (aVa) {
-                                         let tag = aVa;
+                                     M({ja: "期限:", en: "duedate:"}), function (aVa) {
+                                         let encode_duedate = encodeURIComponent(aVa);
                                          var encode_title = encodeURIComponent(title);
                                          var encode_tag = encodeURIComponent(tag);
                                          var edit_xhr = new XMLHttpRequest;
                                          var edit_url ="http://api.toodledo.com/api.php?method=addTask"
                                              + ";key=" +MD5_sig
-                                             + ";title=" + encode_title + ";tag=" + encode_tag;
+                                             + ";title=" + encode_title
+                                             + ";tag=" + encode_tag
+                                             + ";duedate=" + encode_duedate;
                                          edit_xhr.open("GET", edit_url, false);
                                          edit_xhr.send("");
                                          var edit_xml = edit_xhr.responseXML;
                                          if (edit_xml.getElementsByTagName("added")[0].firstChild.nodeValue != null){
                                              showPopup({
                                                            title   : M({ja: "ToDo追加完了", en: "Done!!"}),
-                                                           message : M({ja: "ToDo: ",en: ""}) +
-                                                               encode_title + M({ja: "を追加しました。",en: ""})
+                                                           message : M({ja: "ToDo: ",en: ""}) + title + M({ja: "を追加しました。",en: ""})
                                                        });
                                          }
                                          else{
