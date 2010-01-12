@@ -5,7 +5,7 @@ var PLUGIN_INFO =
     <name lang="ja">Keydledo</name>
     <description>Keydledo</description>
     <description lang="ja">Toodledoを操作</description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Keydledo.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Keydledo.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
