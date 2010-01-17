@@ -563,7 +563,6 @@ var Xbookmark =
                      global_diigo_List = tmpList;
                      return tmpList;
                  };
-             //window.alert(global_diigo_List()[0][0]);
              prompt.selector({
                                  message: "pattern: ",
                                  flags: [ICON|IGNORE,0 , 0, 0, 0,0,0],
@@ -820,19 +819,17 @@ var Xbookmark =
                                   xhr_json.send('');
                                   var  hatena_json = util.safeEval('(' + xhr_json.responseText + ')');
                                   var hatebu_eid = hatena_json.eid;
-                                  window.alert(hatebu_eid);
                                   var hatebu_tag_list = aVa.split(',');
                                   var joined_tag = hatebu_tag_list.join('][');
                                   var send_tag = '[' + joined_tag + ']' + global_hatebu_List[aIndex][3];
-                                                                      //  <title>dummy</title>
-                                    //  <link rel="related" type="text/html" href={global_hatebu_List[aIndex][5]}/>
+                                  //  <title>dummy</title>
+                                  //  <link rel="related" type="text/html" href={global_hatebu_List[aIndex][5]}/>
                                   var request =
                                       <entry xmlns="http://purl.org/atom/ns#">
                                       <summary type="text/plain">{send_tag}</summary>
                                       </entry>;
                                   
                                   var data = request.toString();
-                                  window.alert(data);
                                   var wsse = new WSSEUtils(hatebu_username,hatebu_passaord);
                                   var URL = 'http://b.hatena.ne.jp/atom/edit/' + hatebu_eid;
                                   var xhr = new XMLHttpRequest();
@@ -863,12 +860,12 @@ var Xbookmark =
                  //                  var data='s='+Xbookmark_google_sig+'&bkmk='+global_google_List[aIndex][4]+'&title='+global_google_List[aIndex][1]+
                  //                      '&labels='+aVa+'&annotation='+ここをどこかから持ってくる。+"&zx="+Math.floor(Math.random()*32768);
                  //                  req.send(data);
-                                  showPopup({
-                                                icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
-                                                title   : M({ja: "ごめんなさい。。。", en: "sorry...."}),
-                                                message : M({ja: 'Google bookmarksではこの機能は使えません。',en: ''})
-                                            });
-                           //   },null,tag_list,global_hatebu_List[aIndex][2]);
+                 showPopup({
+                               icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
+                               title   : M({ja: "ごめんなさい。。。", en: "sorry...."}),
+                               message : M({ja: 'Google bookmarksではこの機能は使えません。',en: ''})
+                           });
+                 //   },null,tag_list,global_hatebu_List[aIndex][2]);
              } 
              else{
                  showPopup({
@@ -879,60 +876,59 @@ var Xbookmark =
              }
          }
          
-                  function delete_bookmark (aIndex) {  //0favicon_url,1title,2tag,3comment,4hatebu_user,5url,6date
-                      if ( getOption("Xbookmark_list") === "diigo"){
-                          var delete_url = [global_diigo_List[aIndex][5]];
-                          var xhr = new XMLHttpRequest();
-                          var URL = 'http://api2.diigo.com/bookmarks';
-                          xhr.open("DELETE", URL, false);
-                          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-                          xhr.send("urls=" + encodeURIComponent(JSON.stringify(delete_url)));
-                          showPopup({
-                                        icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
-                                        title   : M({ja: "diigoでブックマークを削除しました。", en: "delete bookmark"}),
-                                        message : M({ja: xhr.responseText,en: global_diigo_List[aIndex][1]})
-                                    });
-                      }
+         function delete_bookmark (aIndex) {  //0favicon_url,1title,2tag,3comment,4hatebu_user,5url,6date
+             if ( getOption("Xbookmark_list") === "diigo"){
+                 var delete_url = [global_diigo_List[aIndex][5]];
+                 var xhr = new XMLHttpRequest();
+                 var URL = 'http://api2.diigo.com/bookmarks';
+                 xhr.open("DELETE", URL, false);
+                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+                 xhr.send("urls=" + encodeURIComponent(JSON.stringify(delete_url)));
+                 showPopup({
+                               icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
+                               title   : M({ja: "diigoでブックマークを削除しました。", en: "delete bookmark"}),
+                               message : M({ja: xhr.responseText,en: global_diigo_List[aIndex][1]})
+                           });
+             }
              else if ( getOption("Xbookmark_list") === "delicious"){
-                                  var xhr        = new XMLHttpRequest();
-                                  var api        = 'https://api.del.icio.us/v1/posts/delete?';
-                                  var URL        = api+'url=' + encodeURIComponent(global_delicious_List[aIndex][5]);
-                                  xhr.open("GET", URL, false);
-                                  xhr.send("");
-                                  showPopup({
-                                                icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
-                                                title   : M({ja: "deliciousでタグを変更しました。", en: "edit tag"}),
-                                                message : M({ja: xhr.responseText,en: xhr.responseText})
-                                            });
+                 var xhr        = new XMLHttpRequest();
+                 var api        = 'https://api.del.icio.us/v1/posts/delete?';
+                 var URL        = api+'url=' + encodeURIComponent(global_delicious_List[aIndex][5]);
+                 xhr.open("GET", URL, false);
+                 xhr.send("");
+                 showPopup({
+                               icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
+                               title   : M({ja: "deliciousでタグを変更しました。", en: "edit tag"}),
+                               message : M({ja: xhr.responseText,en: xhr.responseText})
+                           });
              }
              else if ( getOption("Xbookmark_list") === "hatebu"){
-                                  var xhr_json = new XMLHttpRequest;
-                                  var hatebu_url = 'http://b.hatena.ne.jp/entry/jsonlite/?url=' + encodeURIComponent(global_hatebu_List[aIndex][5]);
-                                  xhr_json.open('GET',hatebu_url,false);
-                                  xhr_json.send('');
-                                  var  hatena_json = util.safeEval('(' + xhr_json.responseText + ')');
-                                  var hatebu_eid = hatena_json.eid;
-                                  var wsse = new WSSEUtils(hatebu_username,hatebu_passaord);
-                                  var URL = 'http://b.hatena.ne.jp/atom/edit/' + hatebu_eid;
-                                  var xhr = new XMLHttpRequest();
-                                  xhr.open("DELETE", URL, false);
-                                  xhr.setRequestHeader("Content-Type", "application/atom+xml");
-                                  xhr.setRequestHeader("X-WSSE", wsse.getWSSEHeader());
-                                  xhr.send('');
-                                  window.alert(xhr.responseText);
-                                  showPopup({
-                                                icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
-                                                title       : M({ja: "はてブのタグを編集しました。", en: "Done!!"}),
-                                                message     : M({ja: global_hatebu_List[aIndex][1],en: global_hatebu_List[aIndex][1]})
-                                            });
+                 var xhr_json = new XMLHttpRequest;
+                 var hatebu_url = 'http://b.hatena.ne.jp/entry/jsonlite/?url=' + encodeURIComponent(global_hatebu_List[aIndex][5]);
+                 xhr_json.open('GET',hatebu_url,false);
+                 xhr_json.send('');
+                 var  hatena_json = util.safeEval('(' + xhr_json.responseText + ')');
+                 var hatebu_eid = hatena_json.eid;
+                 var wsse = new WSSEUtils(hatebu_username,hatebu_passaord);
+                 var URL = 'http://b.hatena.ne.jp/atom/edit/' + hatebu_eid;
+                 var xhr = new XMLHttpRequest();
+                 xhr.open("DELETE", URL, false);
+                 xhr.setRequestHeader("Content-Type", "application/atom+xml");
+                 xhr.setRequestHeader("X-WSSE", wsse.getWSSEHeader());
+                 xhr.send('');
+                 showPopup({
+                               icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
+                               title       : M({ja: "はてブのブックマークを削除しました。", en: "Done!!"}),
+                               message     : M({ja: global_hatebu_List[aIndex][1],en: global_hatebu_List[aIndex][1]})
+                           });
              }
              
              else if ( getOption("Xbookmark_list") === "google"){
-                   showPopup({
-                                                icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
-                                                title   : M({ja: "ごめんなさい。。。", en: "sorry...."}),
-                                                message : M({ja: 'Google bookmarksではこの機能は使えません。',en: ''})
-                                            });
+                 showPopup({
+                               icon : 'http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png',
+                               title   : M({ja: "ごめんなさい。。。", en: "sorry...."}),
+                               message : M({ja: 'Google bookmarksではこの機能は使えません。',en: ''})
+                           });
              } 
              else{
                  showPopup({
@@ -1042,7 +1038,7 @@ var PLUGIN_INFO =
     <name lang="ja">Xbookmark</name>
     <description>Xbookmark</description>
     <description lang="ja">複数のSBMにクロスポスト</description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
