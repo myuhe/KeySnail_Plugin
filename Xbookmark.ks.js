@@ -10,10 +10,10 @@ var Xbookmark_google_sig = (function () {
 
 var optionsDefaultValue = {
     "keymap" : {},
-    "Xbookmark_list" : "diigo",//diigo,delicious,hatebu,googleのうちいずれかを選択。
+    "Xbookmark_list" : "hatebu",//diigo,delicious,hatebu,googleのうちいずれかを選択。
     "diigo_post" : false,
     "delicious_post" : false,
-    "delicious_username" : "myuhe",
+    "delicious_username" : "",
     "google_post" : false,
     "hatebu_post" : false
 };
@@ -1038,7 +1038,7 @@ var PLUGIN_INFO =
     <name lang="ja">Xbookmark</name>
     <description>Xbookmark</description>
     <description lang="ja">複数のSBMにクロスポスト</description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
