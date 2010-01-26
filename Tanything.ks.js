@@ -7,7 +7,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">KeySnailからタブを操作</description>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -272,8 +272,8 @@ var tanything =
 
          function clipUT(aIndex) {
              let row   = currentCollection[aIndex];
-             let uri   = row[1];
-             let title = row[2];
+             let uri   = row[2];
+             let title = row[1];
 
              var txt = "<a href=\"" + uri + "\">" + title + "</a>";
              command.setClipboardText(txt);
@@ -281,8 +281,8 @@ var tanything =
 
          function clipU(aIndex) {
              let row   = currentCollection[aIndex];
-             let uri   = row[1];
-             let title = row[2];
+             let uri   = row[2];
+             let title = row[1];
 
              var txt = "<a href=\"" + uri + "\">" + "</a>";
              command.setClipboardText(txt);

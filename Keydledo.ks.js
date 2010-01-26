@@ -5,7 +5,7 @@ var PLUGIN_INFO =
     <name lang="ja">Keydledo</name>
     <description>Keydledo</description>
     <description lang="ja">Toodledoを操作</description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Keydledo.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Keydledo.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -99,7 +99,7 @@ plugins.options["Keydledo_opt.stylist"] =
     </KeySnailPlugin>;
 var optionsDefaultValue = {
     "keymap"      : {},
-    "Keydledo_id" : "input your id",
+    "Keydledo_id" : "inputyourid",
     "stylist"     : null
 };
 
@@ -131,16 +131,13 @@ var MD5_sig = (function () {
                    try{
                        var token_node = xml.getElementsByTagName("token");
                        token = token_node[0].firstChild.nodeValue;
-                      // window.alert("トークンは" + token);
                    }
                    catch(e){
                        var error_node = xml.getElementsByTagName("error");
                        error = error_node[0].firstChild.nodeValue;
                    }
-                   //token ="td4b4ad19b0a71d";
                    var MD5_pass = hex_md5(password);
                    var sig = hex_md5(MD5_pass + token +userID);
-                   //window.alert(sig);
                    return sig;
                })();
 
