@@ -50,14 +50,17 @@ key.setGlobalKey(["C-c", "p"], function (ev, arg) {
     </KeySnailPlugin>;
  
 function focus_window (ev, arg) {
+    let elem = document.commandDispatcher.focusedElement;
+    if (elem) elem.blur();
     gBrowser.focus();
     _content.focus();
+
 }
 
 function focus_prompt (ev, arg) {
     var p = document.getElementById("keysnail-prompt");
-    if (p.hidden)
-        return;
+                if (p.hidden)
+                    return;
     document.getElementById("keysnail-prompt-textbox").focus();
 }
 
