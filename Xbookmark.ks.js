@@ -1,12 +1,35 @@
 
-var Xbookmark_google_sig = (function () {
-    var xhr = new XMLHttpRequest;
-    xhr.open("GET", 'http://www.google.com/bookmarks/lookup?output=rss&sort=date&start=0&num=10', false);
-    xhr.send(null);
-    var google_node = xhr.responseXML;
-    var sig = google_node.getElementsByTagName("smh:signature")[0].childNodes[0].nodeValue;
-    return sig;
-        })();
+var Xbookmark_google_sig = 
+    (function () {
+         var passwordManager = Components.classes['@mozilla.org/login-manager;1'].getService(Components.interfaces.nsILoginManager);
+         var logins = passwordManager.findLogins({}, "https://www.google.com", "https://www.google.com", null);
+         var google_username = logins[0].username;
+         var google_password = logins[0].password;
+         
+         var req = new XMLHttpRequest();
+         req.open('GET', 'https://www.google.com/accounts/ServiceLoginAuth', false);
+         req.send(null);
+         var cookies = req.getResponseHeader("Set-Cookie").split(/;|(\n)/);
+         for (var i=0;i<cookies.length;i++){
+             if (cookies[i].match(/^(GALX)=/)){
+                 token="&"+cookies[i];
+             }
+         }
+         
+         var xmlhttp = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Components.interfaces.nsIXMLHttpRequest);
+         xmlhttp.open("POST", 'https://www.google.com/accounts/ServiceLoginAuth', false);
+         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+         var data = "ltmpl=wsad&ltmplcache=2&rm=false&Email=" + google_username + "&Passwd=" + google_password + token;
+         xmlhttp.setRequestHeader('Content-Length', data.length);
+         xmlhttp.send(data);
+         
+         var xhr = new XMLHttpRequest;
+         xhr.open("GET", 'http://www.google.com/bookmarks/lookup?output=rss&sort=date&start=0&num=10', false);
+         xhr.send(null);
+         var google_node = xhr.responseXML;
+         var sig = google_node.getElementsByTagName("smh:signature")[0].childNodes[0].nodeValue;
+         return sig;
+     })();
 
 var optionsDefaultValue = {
     "keymap" : {},
@@ -14,6 +37,7 @@ var optionsDefaultValue = {
     "diigo_post" : false,
     "delicious_post" : false,
     "delicious_username" : "",
+    "delicious_password" : "",
     "google_post" : false,
     "hatebu_post" : false
 };
@@ -186,7 +210,7 @@ var Xbookmark =
              try{
                  var logins = passwordManager.findLogins({}, "https://secure.diigo.com", "https://secure.diigo.com", null);
                  var diigo_username = logins[0].username;
-                 var diigo_passaord = logins[0].password;
+                 var diigo_password = logins[0].password;
              }
              catch(e){
                  showPopup({
@@ -215,7 +239,7 @@ var Xbookmark =
          if ( getOption("delicious_post"|| getOption("Xbookmark_list") === "delicious")){
              var request = new XMLHttpRequest();
 
-             request.open('POST', "https://api.del.icio.us", true);
+             request.open('POST', "https://" + "delicious_username" + ":" + "delicious_password" + "@api.del.icio.us", true);
              request.setRequestHeader('Authorization', 'Basic '+ window.btoa('cookie:cookie'));
              request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -240,7 +264,7 @@ var Xbookmark =
                             var tmp_tag_list = new Array();
                             if ( getOption("diigo_post") || getOption("Xbookmark_list") === "diigo"){
                                 var xhr = new XMLHttpRequest;
-                                var url = "http://api2.diigo.com/bookmarks?rows=100&users=" + diigo_username;
+                                var url = "http://" + diigo_username + ":" + diigo_password + "@api2.diigo.com/bookmarks?rows=100&users=" + diigo_username;
                                 xhr.open("GET", url, false);
                                 xhr.send("");
                                 if (xhr.responseText == 'API Limit Exceeded'){
@@ -252,7 +276,7 @@ var Xbookmark =
                                     return;
                                 }
                                 var obj = util.safeEval(xhr.responseText);
-                                for (var i = 0; i < 49; i++) {
+                                for (var i = 0; i<Math.min(obj.length,49); i++) {
                                     var    tag       = obj[i].tags;
                                     tmp_tag_list.push(tag);
                                 }
@@ -535,7 +559,7 @@ var Xbookmark =
                      global_diigo_List = null;
                      var tmpList =[];
                      var xhr = new XMLHttpRequest;
-                     var url = "http://api2.diigo.com/bookmarks?rows=100&users=" + diigo_username + param + dat;
+                     var url = "http://" + diigo_username + ":" + diigo_password + "@api2.diigo.com/bookmarks?rows=100&users=" + diigo_username + param + dat;
 
                      xhr.open("GET", url, false);
                      xhr.send("");
@@ -606,7 +630,7 @@ var Xbookmark =
                                                        }
                                                    ];
                                                    var xhr = new XMLHttpRequest();
-                                                   var URL = 'http://api2.diigo.com/bookmarks';
+                                                   var URL = 'http://' + diigo_username + ":" + diigo_password + '@api2.diigo.com/bookmarks';
                                                    xhr.open("POST", URL, false);
                                                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
                                                    xhr.send("bookmarks=" + encodeURIComponent(JSON.stringify(bookmarks)));
@@ -659,7 +683,7 @@ var Xbookmark =
                                                    var post_tag   = encodeURIComponent(delicious_tmp_tag_list.join(' '));
                                                    var delicious_comment_post = encodeURIComponent(comment_post);
                                                    var xhr        = new XMLHttpRequest();
-                                                   var api        = 'https://api.del.icio.us/v1/posts/add?';
+                                                   var api        = 'https://' + "delicious_username" + ":" + "delicious_password" + '@api.del.icio.us/v1/posts/add?';
                                                    var URL        = api+'url=' + url_post + '&description=' + title_post +'&shared=yes'+'&tags='+ post_tag 
                                                                         + '&extended=' + delicious_comment_post;
                                                    xhr.open("GET", URL, false);
@@ -780,7 +804,7 @@ var Xbookmark =
                                       }
                                   ];
                                   var xhr = new XMLHttpRequest();
-                                  var URL = 'http://api2.diigo.com/bookmarks';
+                                  var URL = 'http://' + diigo_username + ":" + diigo_password + '@api2.diigo.com/bookmarks';
                                   xhr.open("PUT", URL, false);
                                   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
                                   xhr.send("bookmarks=" + encodeURIComponent(JSON.stringify(bookmarks)));
@@ -799,7 +823,7 @@ var Xbookmark =
                                   var post_tag   = encodeURIComponent(delicious_tmp_tag_list.join(' '));
                                   var delicious_comment_post = encodeURIComponent(global_delicious_List[aIndex][3]);
                                   var xhr        = new XMLHttpRequest();
-                                  var api        = 'https://api.del.icio.us/v1/posts/add?';
+                                  var api        = 'https://' + "delicious_username" + ":" + "delicious_password" + '@api.del.icio.us/v1/posts/add?';
                                   var URL        = api+'url=' + encodeURIComponent(global_delicious_List[aIndex][5]) + '&description=' + encodeURIComponent(global_delicious_List[aIndex][1]) +'&shared=yes'+'&tags='+ post_tag + '&extended=' + encodeURIComponent(global_delicious_List[aIndex][3]);
                                   xhr.open("GET", URL, false);
                                   xhr.send("");
@@ -880,7 +904,7 @@ var Xbookmark =
              if ( getOption("Xbookmark_list") === "diigo"){
                  var delete_url = [global_diigo_List[aIndex][5]];
                  var xhr = new XMLHttpRequest();
-                 var URL = 'http://api2.diigo.com/bookmarks';
+                 var URL = 'http://'+ diigo_username + ":" + diigo_password + '@api2.diigo.com/bookmarks';
                  xhr.open("DELETE", URL, false);
                  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
                  xhr.send("urls=" + encodeURIComponent(JSON.stringify(delete_url)));
@@ -892,7 +916,7 @@ var Xbookmark =
              }
              else if ( getOption("Xbookmark_list") === "delicious"){
                  var xhr        = new XMLHttpRequest();
-                 var api        = 'https://api.del.icio.us/v1/posts/delete?';
+                 var api        = 'https://' + "delicious_username" + ":" + "delicious_password" + '@api.del.icio.us/v1/posts/delete?';
                  var URL        = api+'url=' + encodeURIComponent(global_delicious_List[aIndex][5]);
                  xhr.open("GET", URL, false);
                  xhr.send("");
@@ -1038,7 +1062,7 @@ var PLUGIN_INFO =
     <name lang="ja">Xbookmark</name>
     <description>Xbookmark</description>
     <description lang="ja">複数のSBMにクロスポスト</description>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Xbookmark.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -1061,11 +1085,12 @@ var PLUGIN_INFO =
                        >||
                        plugins.options["Xbookmark_opt.Xbookmark_list"] = "hatebu";
                        ||<
-                       投稿先のSBMを選択します。選択する場合は「true」選択しない場合は、「false」とします。delisiousを選択する場合は、ユーザ名を指定して下さい。以下の例では全てのSBMに投稿する場合の例です、deliciousのユーザ名はhogeです。以下のスクリプトを.keysnail.js内のPRESERVEエリアに書いてください。
+                       投稿先のSBMを選択します。選択する場合は「true」選択しない場合は、「false」とします。delisiousを選択する場合は、ユーザ名を指定して下さい。以下の例では全てのSBMに投稿する場合の例です、deliciousのユーザ名はhoge、パスワードはfugaです。以下のスクリプトを.keysnail.js内のPRESERVEエリアに書いてください。
                        >||
 plugins.options["Xbookmark_opt.diigo_post"]         = true;
 plugins.options["Xbookmark_opt.delicious_post"]     = true;
 plugins.options["Xbookmark_opt.delicious_username"] = "hoge";
+plugins.options["Xbookmark_opt.delicious_password"] = "fuga";
 plugins.options["Xbookmark_opt.google_post"]        = true;
 plugins.options["Xbookmark_opt.hatebu_post"]        = true;
                        ||<
