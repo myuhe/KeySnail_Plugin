@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">K2Emacs</name>
     <description>K2Emacs</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -51,7 +51,7 @@ var PLUGIN_INFO =
 .keysnail.js 内の PRESERVE エリアへ以下のようなスクリプトを張り付けてください。
 >||
 key.setEditKey(["C-c", "e"], function (ev, arg) {
-    ext.exec("edit_text", arg);
+    ext.exec("edit_text", arg, ev);
 }, "外部エディタで編集", true);
 ||<
 
@@ -225,11 +225,8 @@ var ucjs_ExternalEditor = {
     }
   },
 
-  //  runapp: function(e){
-  runapp: function(){
-    //コンテキストメニューがポップアップしたノードで外部エディタランチ, edittargetのラッパー
-    //var target = e.target;
-    var target = content.document.activeElement;
+  runapp: function(ev){
+    var target = ev ? ev.originalTarget : content.document.activeElement;
     this.edittarget(target);
   },
   
@@ -436,9 +433,8 @@ var ucjs_ExternalEditor = {
 
 };
 
-function editext() {
-    //    ucjs_ExternalEditor.runapp(event);
-    ucjs_ExternalEditor.runapp();
+function editext(ev) {
+    ucjs_ExternalEditor.runapp(ev);
     ucjs_ExternalEditor.init();
     window.addEventListener("unload", function(){ ucjs_ExternalEditor.uninit(); }, false);
 
