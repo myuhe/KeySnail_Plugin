@@ -160,7 +160,7 @@ var tanything =
               }, M({ja: "タブをピン留め / ピン留めを外す : ", en: ""}) + "toggle pin", "localTogglePin,c"]
          ];
 
-         function getTabs() Array.slice(getBrowser().mTabContainer.childNodes);
+         function getTabs() Array.slice(gBrowser.mTabContainer.childNodes);
 
          function callSelector() {
              function getIconFor(tab) {
@@ -205,12 +205,12 @@ var tanything =
          }
 
          function focusContent() {
-             getBrowser().focus();
+             gBrowser.focus();
              _content.focus();
          }
 
          function open(aIndex) {
-             getBrowser().mTabContainer.selectedIndex = aIndex;
+             gBrowser.mTabContainer.selectedIndex = aIndex;
          }
 
          function close(aIndex) {
@@ -220,7 +220,7 @@ var tanything =
                  return;
              }
 
-             getBrowser().removeTab(getTabs()[aIndex]);
+             gBrowser.removeTab(getTabs()[aIndex]);
              currentCollection.splice(aIndex, 1);
              prompt.refresh();
          }
@@ -229,7 +229,7 @@ var tanything =
              let tabs = getTabs();
 
              for (let i = 0; i < aIndex; ++i)
-                 getBrowser().removeTab(tabs[i]);
+                 gBrowser.removeTab(tabs[i]);
 
              currentCollection.splice(0, aIndex);
              prompt.refresh(0);
@@ -239,7 +239,7 @@ var tanything =
              let tabs = getTabs();
 
              for (let i = aIndex + 1; i < tabs.length; ++i)
-                 getBrowser().removeTab(tabs[i]);
+                 gBrowser.removeTab(tabs[i]);
 
              currentCollection.splice(aIndex + 1, tabs.length - (aIndex + 1));
              prompt.refresh(aIndex);
@@ -251,7 +251,7 @@ var tanything =
              for (let i = 0; i < tabs.length; ++i)
              {
                  if (i !== aIndex)
-                     getBrowser().removeTab(tabs[i]);
+                     gBrowser.removeTab(tabs[i]);
              }
 
              currentCollection = [currentCollection[aIndex]];
@@ -279,7 +279,7 @@ var tanything =
                  {
                      if (host === getHost(getURIFromTab(tabs[i])))
                      {
-                         getBrowser().removeTab(tabs[i]);
+                         gBrowser.removeTab(tabs[i]);
                          currentCollection.splice(i, 1);
                      }
                  }
@@ -307,7 +307,7 @@ var tanything =
          }
 
          function movetoend(aIndex) {
-             let browser = getBrowser();
+             let browser = gBrowser;
              let tabs    = getTabs();
 
              browser.moveTabTo(tabs[aIndex], tabs.length - 1);
@@ -320,7 +320,7 @@ var tanything =
          }
 
          function movetostart(aIndex) {
-             let browser = getBrowser();
+             let browser = gBrowser;
              let tabs    = getTabs();
 
              browser.moveTabTo(tabs[aIndex], 0);
