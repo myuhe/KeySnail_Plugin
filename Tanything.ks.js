@@ -317,7 +317,7 @@ var tanything =
          function addToBookmarks(aIndex) {
              let tab = getTabs()[aIndex];
 
-             [title, uri] = [tab.linkedBrowser.contentDocument.title, getURIFromTab(tab)];
+             let [title, uri] = [tab.linkedBrowser.contentDocument.title, getURIFromTab(tab)];
              PlacesUIUtils.showAddBookmarkUI(uri, title);
          }
 
