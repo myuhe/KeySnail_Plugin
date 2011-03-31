@@ -111,17 +111,11 @@ plugins.options["tanything_opt.keymap"] = {
 
 // ================ Key Bindings ====================== //
 
-var optionsDefaultValue = {
-    "keymap" : {}
-};
-
-function getOption(aName) {
-    var fullName = "tanything_opt." + aName;
-    if (typeof plugins.options[fullName] !== "undefined")
-        return plugins.options[fullName];
-    else
-        return aName in optionsDefaultValue ? optionsDefaultValue[aName] : undefined;
-}
+let pOptions = plugins.setupOptions("tanything_opt", {
+    keymap : {
+        preset: {}
+    }
+}, PLUGIN_INFO);
 
 var tanything =
     (function () {
@@ -179,7 +173,7 @@ var tanything =
                                  flags               : [ICON | IGNORE, 0, 0],
                                  collection          : currentCollection,
                                  header              : ["title", "url"],
-                                 keymap              : getOption("keymap"),
+                                 keymap              : pOptions.keymap,
                                  actions             : tanythingAction,
                                  supressRecoverFocus : true,
                                  onFinish            : focusContent
