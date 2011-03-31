@@ -1,6 +1,3 @@
-// original author myuhe
-// modified by mooz
-
 var PLUGIN_INFO =
 <KeySnailPlugin>
     <name>Tanything</name>
