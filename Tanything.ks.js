@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">Tanything</name>
     <description>Tanything</description>
     <description lang="ja">KeySnailからタブを操作</description>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
     <iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/Tanything.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
