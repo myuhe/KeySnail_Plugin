@@ -95,7 +95,8 @@ plugins.options["tanything_opt.keymap"] = {
     "d"     : "localDomainclose",
     "c"     : "localClipUT",
     "C"     : "localClipU",
-    "e"     : "localMovetoend"
+    "e"     : "localMovetoend",
+    "p"     : "localTogglePin"
 };
 ||<
 
@@ -108,6 +109,11 @@ plugins.options["tanything_opt.keymap"] = {
 let pOptions = plugins.setupOptions("tanything_opt", {
     keymap : {
         preset: {}
+    },
+    pinned_tab_style : {
+        preset: "font-weight : bold;",
+        description: M({ja: "ピン留めされたタブのスタイル",
+                        en: "Style of the pinned tab"})
     }
 }, PLUGIN_INFO);
 
@@ -148,30 +154,54 @@ var tanything =
               }, M({ja: "タブを先頭に移動する : ", en: ""}) + "move to start", "localMovetostart,c"],
              [function (aIndex) {
                   if (aIndex >= 0) addToBookmarks(aIndex);
-              }, M({ja: "タブをブックマークに追加 : ", en: ""}) + "add selected tab to bookmarks", "localAddBokmark,c"]
+              }, M({ja: "タブをブックマークに追加 : ", en: ""}) + "add selected tab to bookmarks", "localAddBokmark,c"],
+             [function (aIndex) {
+                  if (aIndex >= 0) togglePin(aIndex);
+              }, M({ja: "タブをピン留め / ピン留めを外す : ", en: ""}) + "toggle pin", "localTogglePin,c"]
          ];
 
          function getTabs() Array.slice(getBrowser().mTabContainer.childNodes);
 
          function callSelector() {
-             // const defaultIcon = "chrome://keysnail/skin/icon16.png";
+             function getIconFor(tab) {
+                 return (tab.linkedBrowser.__SS_data) ?
+                     tab.linkedBrowser.__SS_data.attributes.image :
+                     util.getFaviconPath(tab.linkedBrowser.contentDocument.URL);
+             }
 
-             currentCollection = [[util.getFaviconPath(tab.linkedBrowser.contentDocument.URL /*, defaultIcon */),
-                                   tab.label,
-                                   tab.linkedBrowser.contentDocument.URL]
-                                  for each (tab in getTabs())];
+             function getInfoForTab(tab) {
+                 let browser = tab.linkedBrowser;
+                 let win     = browser.contentWindow;
+
+                 let title = tab.label;
+                 let url   = win.location.href;
+
+                 return [util.getFaviconPath(url), title, url, tab];
+             }
+
+             currentCollection = [getInfoForTab(tab) for each (tab in getTabs())];
 
              prompt.selector({
-                                 message             : "select tab: ",
-                                 initialIndex        : getBrowser().mTabContainer.selectedIndex,
-                                 flags               : [ICON | IGNORE, 0, 0],
-                                 collection          : currentCollection,
-                                 header              : ["title", "url"],
-                                 keymap              : pOptions.keymap,
-                                 actions             : tanythingAction,
-                                 supressRecoverFocus : true,
-                                 onFinish            : focusContent
-                             });
+                 message             : "select tab: ",
+                 initialIndex        : gBrowser.mTabContainer.selectedIndex,
+                 flags               : [ICON | IGNORE, 0, 0, IGNORE | HIDDEN],
+                 collection          : currentCollection,
+                 header              : ["title", "url"],
+                 keymap              : pOptions.keymap,
+                 actions             : tanythingAction,
+                 supressRecoverFocus : true,
+                 onFinish            : focusContent,
+                 stylist             : function (args, n, current) {
+                     if (current !== currentCollection)
+                         return null;
+
+                     let tab = args[3];
+                     if (tab.pinned)
+                         return pOptions.pinned_tab_style;
+                     else
+                         return null;
+                 }
+             });
          }
 
          function focusContent() {
@@ -307,6 +337,26 @@ var tanything =
 
              let [title, uri] = [tab.linkedBrowser.contentDocument.title, getURIFromTab(tab)];
              PlacesUIUtils.showAddBookmarkUI(uri, title);
+         }
+
+         function togglePin(aIndex) {
+             if (!("pinTab" in gBrowser))
+                 return;
+
+             let tab = getTabs()[aIndex];
+
+             if (tab.pinned)
+                 gBrowser.unpinTab(tab);
+             else
+                 gBrowser.pinTab(tab);
+
+             let tabs = getTabs();
+
+             // move pinned tab
+             let newIdx = tabs.indexOf(tab);
+             currentCollection.splice(newIdx, 0, currentCollection.splice(aIndex, 1)[0]);
+
+             prompt.refresh(aIndex);
          }
 
          var self = {
