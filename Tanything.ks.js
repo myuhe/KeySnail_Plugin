@@ -12,9 +12,6 @@ var PLUGIN_INFO =
     <license lang="ja">MIT ライセンス</license>
     <minVersion>1.2.7</minVersion>
     <include>main</include>
-    <provides>
-        <ext>tanything</ext>
-    </provides>
     <detail><![CDATA[
 ==== What's this ====
 
@@ -321,6 +318,9 @@ var tanything =
          return self;
      })();
 
-ext.add("tanything", tanything.showAlltab,
-        M({ja: "タブを一覧表示",
-           en: "view all tabs "}));
+plugins.withProvides(function (provide) {
+    provide("tanything", tanything.showAlltab, M({
+        ja: "タブを一覧表示",
+        en: "view all tabs "
+    }));
+}, PLUGIN_INFO);
