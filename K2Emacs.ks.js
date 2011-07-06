@@ -157,7 +157,7 @@ var ucjs_ExternalEditor = {
       if(!html.hasAttribute("__ucjs_editor_")) return;
     }catch(e){}
     
-    var textareas, filename, timestamp, encode, file, inst, sstream, utf, textBoxText
+    var textareas, filename, timestamp, encode, file, istr, sstream, utf, textBoxText;
     //すべてのtextareaとinputに関して, テンポラリファイルがあればその中身を書き戻す
     textareas = GetAllTextAreas(target);
     if (textareas.length<=0) return;
@@ -272,7 +272,7 @@ var ucjs_ExternalEditor = {
 
     // 外部エディタをランチ
     if(this.editfile(file.path, target) == false) return;
-    var html = target.ownerDocument.getElementsByTagName("html")[0];
+    var html = getBrowser().contentDocument.getElementsByTagName("html")[0];
     try{
       html.setAttribute("__ucjs_editor_",true);
     }catch(e){return;}
