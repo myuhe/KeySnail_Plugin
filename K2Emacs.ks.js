@@ -4,13 +4,13 @@ var PLUGIN_INFO =
     <name lang="ja">K2Emacs</name>
     <description>K2Emacs</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
-    <minVersion>0.9.4</minVersion>
+    <minVersion>1.8.9</minVersion>
     <include>main</include>
     <provides>
     <ext>edit_text</ext>
@@ -49,7 +49,7 @@ var PLUGIN_INFO =
 
 次のようにして適当なキーへ K2Emacs を割り当てます。
 .keysnail.js 内の PRESERVE エリアへ以下のようなスクリプトを張り付けてください。
->||
+>|javascript|
 key.setEditKey(["C-c", "e"], function (ev, arg) {
     ext.exec("edit_text", arg, ev);
 }, "外部エディタで編集", true);
@@ -60,7 +60,7 @@ key.setEditKey(["C-c", "e"], function (ev, arg) {
 .keysnail.js 内の PRESERVE エリアへ以下のようなスクリプトを張り付けてください。
 なお、デフォルトでは、Linuxの利用を想定した設定となっています。
 以下は、Windowsを使う場合の設定例です。
->||
+>|javascript|
 plugins.options["K2Emacs.editor"]    = "C:\\WINDOWS\\notepad.exe";
 plugins.options["K2Emacs.ext"]    = "html";
 plugins.options["K2Emacs.encode"] = "UTF-8"
@@ -74,22 +74,18 @@ plugins.options["K2Emacs.sep"] = "\\";
     </KeySnailPlugin>;
  
 var optionsDefaultValue = {
-    //  "editor"          : "/usr/bin/emacs23",
-      "editor"          : "/usr/bin/emacsclient.emacs23 -c -a emacs23",
-    "ext"           : "txt",
-    "encode"        : "UTF-8",
-    "sep"          : '/'
+    "editor" : "/usr/bin/emacsclient.emacs23 -c -a emacs23",
+    "ext"    : "txt",
+    "encode" : "UTF-8",
+    "sep"    : '/'
 };
 
 function getOption(aName) {
     var fullName = "K2Emacs." + aName;
-
     if (typeof(plugins.options[fullName]) != "undefined")
     {
         return plugins.options[fullName];
-    }
-    else
-    {
+    }else{
         return aName in optionsDefaultValue ? optionsDefaultValue[aName] : undefined;
     }
 }
@@ -285,15 +281,12 @@ var ucjs_ExternalEditor = {
       var args = this._editor.split(/\s+/);
       var editorPath = args.shift();
       args.push(filename);
-
       var editorFile;
-
       var xulRuntime = Components.classes["@mozilla.org/xre/app-info;1"]
           .getService(Components.interfaces.nsIXULRuntime);
       if ("Darwin" == xulRuntime.OS)
       {
           // wrap with open command (inspired from GreaseMonkey)
-
           args.unshift(editorPath);
           args.unshift("-a");
 
@@ -301,9 +294,7 @@ var ucjs_ExternalEditor = {
               .createInstance(Components.interfaces.nsILocalFile);
           editorFile.followLinks = true;
           editorFile.initWithPath("/usr/bin/open");
-      }
-      else
-      {
+      }else{
           try {
               editorFile = util.openFile(editorPath);
           } catch (e) {
@@ -316,13 +307,10 @@ var ucjs_ExternalEditor = {
       target.setAttribute("encode", this._encode);
       target.setAttribute("filename", filename);
       target.setAttribute("timestamp", editorFile.lastModifiedTime);
-
       var process = Components.classes["@mozilla.org/process/util;1"]
           .createInstance(Components.interfaces.nsIProcess);
       process.init(editorFile);
-
       process.run(false, args, args.length);
-
       return true;
   },
  
@@ -336,7 +324,8 @@ var ucjs_ExternalEditor = {
      * @returns {String} a hashed string.
      */
     function hashString(some_string) {
-      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].
+            createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
       converter.charset = "UTF-8";
 
       /* result is the result of the hashing.  It's not yet a string,
@@ -344,15 +333,13 @@ var ucjs_ExternalEditor = {
        * result.value will contain the array length
        */
       var result = {};
-      
       /* data is an array of bytes */
       var data = converter.convertToByteArray(some_string, result);
-      var ch   = Components.classes["@mozilla.org/security/hash;1"].createInstance(Components.interfaces.nsICryptoHash);
-      
+      var ch   = Components.classes["@mozilla.org/security/hash;1"].
+            createInstance(Components.interfaces.nsICryptoHash);
       ch.init(ch.MD5);
       ch.update(data, data.length);
       var hash = ch.finish(true);
-      
       // return the two-digit hexadecimal code for a byte
       var toHexString = function(charCode) {
         return ("0" + charCode.toString(36)).slice(-2);
@@ -411,6 +398,7 @@ var ucjs_ExternalEditor = {
       return false;
     }
   },
+
 /**
 * Returns the directory where we put files to edit.
 * @returns nsILocalFile The location where we should write editable files.
@@ -430,16 +418,13 @@ var ucjs_ExternalEditor = {
     }
     return fobj.path;
   }
-
 };
 
-function editext(ev) {
-    ucjs_ExternalEditor.runapp(ev);
+function editext() {
+    ucjs_ExternalEditor.runapp();
     ucjs_ExternalEditor.init();
     window.addEventListener("unload", function(){ ucjs_ExternalEditor.uninit(); }, false);
-
 }
-
 
 ext.add("edit_text", editext,
         M({ja: "外部エディタで編集",
