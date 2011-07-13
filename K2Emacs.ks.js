@@ -4,7 +4,7 @@ var PLUGIN_INFO =
     <name lang="ja">K2Emacs</name>
     <description>K2Emacs</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
@@ -284,7 +284,7 @@ var ucjs_ExternalEditor = {
       var editorFile;
       var xulRuntime = Components.classes["@mozilla.org/xre/app-info;1"]
           .getService(Components.interfaces.nsIXULRuntime);
-      if ("Darwin" == xulRuntime.OS)
+      if ("Darwin" == xulRuntime.OS && editorPath.match('\.app$'))
       {
           // wrap with open command (inspired from GreaseMonkey)
           args.unshift(editorPath);
