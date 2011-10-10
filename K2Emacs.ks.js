@@ -420,8 +420,8 @@ var ucjs_ExternalEditor = {
   }
 };
 
-function editext() {
-    ucjs_ExternalEditor.runapp();
+function editext(ev) {
+    ucjs_ExternalEditor.runapp(ev);
     ucjs_ExternalEditor.init();
     window.addEventListener("unload", function(){ ucjs_ExternalEditor.uninit(); }, false);
 }
