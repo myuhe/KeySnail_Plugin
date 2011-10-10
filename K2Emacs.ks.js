@@ -10,7 +10,7 @@ var PLUGIN_INFO =
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
-    <minVersion>1.8.9</minVersion>
+    <minVersion>1.9.0</minVersion>
     <include>main</include>
     <provides>
     <ext>edit_text</ext>
