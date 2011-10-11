@@ -4,13 +4,13 @@ var PLUGIN_INFO =
     <name lang="ja">K2Emacs</name>
     <description>K2Emacs</description>
     <description lang="ja">KeySnailで本当にEmacs</description>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
 　　<iconURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.png</iconURL>
     <updateURL>http://github.com/myuhe/KeySnail_Plugin/raw/master/K2Emacs.ks.js</updateURL>
     <author mail="yuhei.maeda_at_gmail.com" homepage="http://sheephead.homelinux.org/">myuhe</author>
     <license>The MIT License</license>
     <license lang="ja">MIT ライセンス</license>
-    <minVersion>1.9.0</minVersion>
+    <minVersion>1.8.9</minVersion>
     <include>main</include>
     <provides>
     <ext>edit_text</ext>
