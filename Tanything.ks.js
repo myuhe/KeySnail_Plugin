@@ -179,7 +179,9 @@ var tanything =
                  return [util.getFaviconPath(url), title, url, tab];
              }
 
-             currentCollection = [getInfoForTab(tab) for each (tab in getTabs())];
+             currentCollection = getTabs().map(function (tab) {
+                 return getInfoForTab(tab);
+             });
 
              prompt.selector({
                  message             : "select tab: ",
